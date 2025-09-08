@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Acesso - Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Sistema de Acesso e RBAC</h1>
+
+        <div class="tabs">
+            <button class="tab-button active" onclick="openTab('login')">Login</button>
+            <button class="tab-button" onclick="openTab('register')">Cadastro</button>
+        </div>
+
+        <div id="login" class="tab-content active">
+            <h2>Login</h2>
+            <form id="login-form">
+                <input type="text" id="log-username" placeholder="Nome de Usuário" required>
+                <input type="password" id="log-password" placeholder="Senha" required>
+                <button type="submit">Entrar</button>
+            </form>
+        </div>
+
+        <div id="register" class="tab-content">
+            <h2>Cadastro</h2>
+            <form id="register-form">
+                <input type="text" id="reg-username" placeholder="Nome de Usuário" required>
+                <input type="password" id="reg-password" placeholder="Senha" required>
+                <select id="reg-role" required>
+                    <option value="" disabled selected>Selecione um papel</option>
+                    <option value="Contratante">Contratante</option>
+                    <option value="Profissional">Profissional</option>
+                    <option value="Admin">Admin</option>
+                </select>
+                <button type="submit">Cadastrar</button>
+            </form>
+        </div>
+        
+        <div class="status-section">
+            <p id="message"></p>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
