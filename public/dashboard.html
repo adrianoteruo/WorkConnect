@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Sistema de Acesso</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Dashboard</h1>
+        
+        <div class="status-section">
+            <p id="user-info"></p>
+            <button id="logout-btn">Sair</button>
+        </div>
+
+        <div class="protected-section">
+            <h2>Teste as Rotas Protegidas</h2>
+            <button id="contratante-btn">Acessar Rota de Contratante</button>
+            <button id="profissional-btn">Acessar Rota de Profissional</button>
+            <button id="admin-btn">Acessar Rota de Admin</button>
+        </div>
+
+        <div id="api-response" class="api-response"></div>
+    </div>
+    <script src="dashboard.js"></script>
+</body>
+</html>
