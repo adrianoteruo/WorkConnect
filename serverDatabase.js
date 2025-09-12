@@ -5,7 +5,7 @@ const dbConfig = {
     host: 'localhost',
     user: 'root', // Altere conforme sua configuração
     password: '', // Altere conforme sua configuração
-    database: 'rbac_system'
+    database: 'workconnect'
 };
 
 // Criar pool de conexões
@@ -23,5 +23,6 @@ async function testConnection() {
 }
 
 testConnection();
+
 
 module.exports = pool;
