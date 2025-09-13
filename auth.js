@@ -78,5 +78,102 @@ router.post('/login', async (req, res) => {
         res.status(500).json({ message: 'Erro interno do servidor.' });
     }
 });
+// Alterar usuário 
+router.put('/update/:id', async (req, res) => {
+    const { id } = req.params;
+    const { username, password, role } = req.body;
+
+    if (!username && !password && !role) {
+        return res.status(400).json({ message: 'Informe ao menos um campo para atualizar.' });
+    }
+
+    try {
+        // Buscar usuário
+        const [users] = await pool.execute(
+            'SELECT * FROM users WHERE id = ?',
+            [id]
+        );
+
+        if (users.length === 0) {
+            return res.status(404).json({ message: 'Usuário não encontrado.' });
+        }
+
+        // Preparar novos valores
+        let newUsername = username || users[0].username;
+        let newRole = role || users[0].role;
+        let newPassword = users[0].password;
+
+        if (password) {
+            const saltRounds = 10;
+            newPassword = await bcrypt.hash(password, saltRounds);
+        }
+
+        // Atualizar usuário
+        await pool.execute(
+            'UPDATE users SET username = ?, password = ?, role = ? WHERE id = ?',
+            [newUsername, newPassword, newRole, id]
+        );
+
+        console.log(`Usuário ${id} atualizado com sucesso.`);
+        res.json({ 
+            message: 'Usuário atualizado com sucesso!', 
+            user: { id, username: newUsername, role: newRole } 
+        });
+    } catch (error) {
+        console.error('Erro ao atualizar usuário:', error);
+        res.status(500).json({ message: 'Erro interno do servidor.' });
+    }
+});
+
+// Listar todos os usuários
+router.get('/users', async (req, res) => {
+    try {
+        const [users] = await pool.execute('SELECT id, username, role, created_at FROM users');
+        res.json(users);
+    } catch (error) {
+        console.error('Erro ao listar usuários:', error);
+        res.status(500).json({ message: 'Erro interno do servidor.' });
+    }
+});
+
+// Buscar um usuário específico pelo ID
+router.get('/users/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const [users] = await pool.execute(
+            'SELECT id, username, role, created_at FROM users WHERE id = ?',
+            [id]
+        );
+
+        if (users.length === 0) {
+            return res.status(404).json({ message: 'Usuário não encontrado.' });
+        }
+
+        res.json(users[0]);
+    } catch (error) {
+        console.error('Erro ao buscar usuário:', error);
+        res.status(500).json({ message: 'Erro interno do servidor.' });
+    }
+});
+
+// Deletar usuário
+router.delete('/users/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const [result] = await pool.execute('DELETE FROM users WHERE id = ?', [id]);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Usuário não encontrado.' });
+        }
+
+        console.log(`Usuário ${id} deletado com sucesso.`);
+        res.json({ message: 'Usuário deletado com sucesso!' });
+    } catch (error) {
+        console.error('Erro ao deletar usuário:', error);
+        res.status(500).json({ message: 'Erro interno do servidor.' });
+    }
+});
 
 module.exports = router;
