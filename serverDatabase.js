@@ -3,8 +3,8 @@ const mysql = require('mysql2/promise');
 // Configuração da conexão com o MySQL
 const dbConfig = {
     host: 'localhost',
-    user: 'root', // Altere conforme sua configuração
-    password: '', // Altere conforme sua configuração
+    user: 'root', 
+    password: '', 
     database: 'workconnect'
 };
 
@@ -26,3 +26,4 @@ testConnection();
 
 
 module.exports = pool;
+
