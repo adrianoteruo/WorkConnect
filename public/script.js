@@ -18,6 +18,7 @@ function openTab(tabName) {
     }
 
     document.getElementById(tabName).classList.add('active');
+    
     event.currentTarget.classList.add('active');
 }
 
@@ -25,7 +26,7 @@ function openTab(tabName) {
 const registerUser = async (e) => {
     e.preventDefault();
     const username = document.getElementById('reg-username').value;
-    const password = document.getElementById('reg-password').value;
+    const password = document.getElementById('reg-password').value; 
     const role = document.getElementById('reg-role').value;
 
     try {
@@ -39,12 +40,17 @@ const registerUser = async (e) => {
         messageEl.textContent = data.message;
         
         if (response.ok) {
-            // Limpar formulário após cadastro bem-sucedido
             document.getElementById('register-form').reset();
+       
+            messageEl.style.color = 'green';
+            setTimeout(() => openTab('login'), 2000); 
+        } else {
+            messageEl.style.color = 'red';
         }
     } catch (error) {
         console.error('Erro no registro:', error);
         messageEl.textContent = 'Erro ao conectar com o servidor.';
+        messageEl.style.color = 'red';
     }
 };
 
@@ -64,19 +70,31 @@ const loginUser = async (e) => {
         const data = await response.json();
         
         if (response.ok) {
-            // Armazenar informações do usuário
+            messageEl.textContent = "Login bem-sucedido! A redirecionar...";
+            messageEl.style.color = 'green';
+            
+            
+            localStorage.setItem('token', data.token);
+            
+     
+            localStorage.setItem('username', data.username);
+            
             localStorage.setItem('userRole', data.role);
             localStorage.setItem('userId', data.userId);
-            localStorage.setItem('username', username);
             
-            // Redirecionar para o dashboard
-            window.location.href = '/dashboard';
+ 
+            setTimeout(() => {
+                window.location.href = '/dashboard';
+            }, 1000);
+
         } else {
             messageEl.textContent = data.message;
+            messageEl.style.color = 'red';
         }
     } catch (error) {
         console.error('Erro no login:', error);
         messageEl.textContent = 'Erro ao conectar com o servidor.';
+        messageEl.style.color = 'red';
     }
 };
 
