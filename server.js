@@ -4,8 +4,8 @@ const app = express();
 const port = 3000;
 
 // Importar rotas
-const authRoutes = require('./auth');
-const protectedRoutes = require('./serverProtect');
+const { router: authRoutes, verifyToken } = require('./auth');
+const { protectedRouter, checkRole } = require('./serverProtect');
 
 // Middleware
 app.use(express.json());
@@ -32,7 +32,8 @@ app.use((req, res, next) => {
 
 // Rotas
 app.use('/auth', authRoutes);
-app.use('/protected', protectedRoutes);
+app.use('/protected', protectedRouter);
+app.use('/api', verifyToken, checkRole(['Admin']), authRoutes);
 
 // Servir páginas HTML
 app.get('/', (req, res) => {
