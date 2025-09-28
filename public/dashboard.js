@@ -10,33 +10,36 @@ const apiResponseEl = document.getElementById('api-response');
 
 // Verificar se o usuário está logado
 window.addEventListener('load', () => {
+    const token = localStorage.getItem('token'); 
     const userRole = localStorage.getItem('userRole');
     const username = localStorage.getItem('username');
     
-    if (!userRole) {
-        // Se não estiver logado, redirecionar para a página inicial
+    if (!token) { 
         window.location.href = '/';
         return;
     }
     
-    // Exibir informações do usuário
     userInfoEl.textContent = `Logado como: ${username} (${userRole})`;
 });
 
 // Acessar rotas protegidas
 const accessProtected = async (endpoint) => {
-    const userRole = localStorage.getItem('userRole');
+    const token = localStorage.getItem('token'); 
     
-    if (!userRole) {
+    if (!token) {
         apiResponseEl.textContent = 'Você precisa estar logado para acessar esta rota.';
         return;
     }
 
     try {
+        
         const response = await fetch(`${API_URL}/protected/${endpoint}`, {
             method: 'GET',
-            headers: { 'user-role': userRole }
+            headers: {
+                'Authorization': `Bearer ${token}` 
+            }
         });
+      
 
         const data = await response.json();
         
@@ -53,6 +56,7 @@ const accessProtected = async (endpoint) => {
 
 // Logout
 const logout = () => {
+    localStorage.removeItem('token'); 
     localStorage.removeItem('userRole');
     localStorage.removeItem('userId');
     localStorage.removeItem('username');
