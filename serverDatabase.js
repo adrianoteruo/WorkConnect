@@ -1,11 +1,11 @@
 const mysql = require('mysql2/promise');
 
-// Configuração da conexão com o MySQL
+
 const dbConfig = {
     host: 'localhost',
-    user: 'root', // Altere conforme sua configuração
-    password: '', // Altere conforme sua configuração
-    database: 'rbac_system'
+    user: 'root', 
+    password: '',
+    database: 'workconnect'
 };
 
 // Criar pool de conexões
@@ -23,5 +23,6 @@ async function testConnection() {
 }
 
 testConnection();
+
 
 module.exports = pool;
