@@ -24,84 +24,76 @@
 
     <main class="conteudo">
       <section id="editarPerfil" class="secao">
-  <h2>Editar Perfil</h2>
-  <form id="formEditarPerfil" class="formPerfil">
-    <div class="foto-perfil">
-  <img id="previewFoto" src="img/baixados.webp" alt="Foto de Perfil">
-  <label for="editFoto" class="btnFoto">Alterar Foto</label>
-  <input type="file" id="editFoto" accept="image/*" hidden>
-</div>
-    <div class="row">
-      <div class="col">
-        <label for="editNome">Nome:</label>
-        <input type="text" id="editNome">
-      </div>
-      <div class="col">
-        <label for="editEmail">E-mail:</label>
-        <input type="email" id="editEmail">
-      </div>
-    </div>
+        <h2>Editar Perfil</h2>
+        <form id="formEditarPerfil" class="formPerfil">
+          <div class="foto-perfil">
+            <img id="previewFoto" src="img/baixados.webp" alt="Foto de Perfil">
+            <label for="editFoto" class="btnFoto">Alterar Foto</label>
+            <input type="file" id="editFoto" accept="image/*" hidden>
+          </div>
+          <div class="row">
+            <div class="col">
+              <label for="editNome">Nome:</label>
+              <input type="text" id="editNome">
+            </div>
+            <div class="col">
+              <label for="editEmail">E-mail:</label>
+              <input type="email" id="editEmail">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <label for="editTelefone">Telefone:</label>
+              <input type="tel" id="editTelefone">
+            </div>
+            <div class="col">
+              <label for="editCEP">CEP:</label>
+              <input type="text" id="editCEP">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <label for="editRua">Rua:</label>
+              <input type="text" id="editRua">
+            </div>
+            <div class="col">
+              <label for="editNumero">Número:</label>
+              <input type="text" id="editNumero">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <label for="editComplemento">Complemento:</label>
+              <input type="text" id="editComplemento">
+            </div>
+            <div class="col">
+              <label for="editBairro">Bairro:</label>
+              <input type="text" id="editBairro">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <label for="editCidade">Cidade:</label>
+              <input type="text" id="editCidade">
+            </div>
+            <div class="col">
+              <label for="editEstado">Estado:</label>
+              <input type="text" id="editEstado">
+            </div>
+          </div>
+          <label for="editServico">Serviço Oferecido:</label>
+          <input type="text" id="editServico">
+          <label for="editDescricao">Descrição do Serviço:</label>
+          <textarea id="editDescricao"></textarea>
 
-    <div class="row">
-      <div class="col">
-        <label for="editTelefone">Telefone:</label>
-        <input type="tel" id="editTelefone">
-      </div>
-      <div class="col">
-        <label for="editCEP">CEP:</label>
-        <input type="text" id="editCEP">
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col">
-        <label for="editRua">Rua:</label>
-        <input type="text" id="editRua">
-      </div>
-      <div class="col">
-        <label for="editNumero">Número:</label>
-        <input type="text" id="editNumero">
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col">
-        <label for="editComplemento">Complemento:</label>
-        <input type="text" id="editComplemento">
-      </div>
-      <div class="col">
-        <label for="editBairro">Bairro:</label>
-        <input type="text" id="editBairro">
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col">
-        <label for="editCidade">Cidade:</label>
-        <input type="text" id="editCidade">
-      </div>
-      <div class="col">
-        <label for="editEstado">Estado:</label>
-        <input type="text" id="editEstado">
-      </div>
-    </div>
-
-    <label for="editServico">Serviço Oferecido:</label>
-    <input type="text" id="editServico">
-
-    <label for="editDescricao">Descrição do Serviço:</label>
-    <textarea id="editDescricao"></textarea>
-
-    <button type="submit">Salvar Alterações</button>
-
-    <button type="submit">Salvar Alterações</button>
-    
-    <div class="delete-zone">
-      <hr>
-      <button type="button" id="btnExcluirPerfil" class="btn-delete">Excluir Perfil</button>
-    </div>
-  </form>
-</section>
+          <button type="submit">Salvar Alterações</button>
+          
+          <div class="delete-zone">
+            <hr>
+            <button type="button" id="btnExcluirPerfil" class="btn-delete">Excluir Perfil</button>
+          </div>
+        </form>
+      </section>
 
       <section id="visaoGeral" class="secao ativa">
         <h1>Bem-vindo ao Workconnect!</h1>
@@ -122,14 +114,24 @@
       </section>
 
       <section id="mensagens" class="secao">
-    <h2>Mensagens</h2>
-    <div id="chat-messages" class="chatBox">
+        <div class="mensagens-layout">
+          <div class="lista-contatos">
+            <h2>Contatos</h2>
+            <div id="contact-list">
+              </div>
+          </div>
+          <div class="chat-container">
+            <h2 id="chat-with-name">Selecione um contato para conversar</h2>
+            <div id="chat-messages" class="chatBox">
+              <p class="chat-placeholder">Suas mensagens aparecerão aqui.</p>
+            </div>
+            <div class="inputMensagem">
+              <input type="text" id="chat-message-input" placeholder="Digite sua mensagem...">
+              <button id="send-message-btn">Enviar</button>
+            </div>
+          </div>
         </div>
-    <div class="inputMensagem">
-        <input type="text" id="chat-message-input" placeholder="Digite sua mensagem...">
-        <button id="send-message-btn">Enviar</button>
-    </div>
-</section>
+      </section>
 
       <section id="avaliacoes" class="secao">
         <h2>Avaliações</h2>
@@ -146,7 +148,8 @@
       </section>
     </main>
   </div>
-
+  
+  <script src="/socket.io/socket.io.js"></script>
   <script src="profissional.js"></script>
 </body>
 </html>
