@@ -1,10 +1,13 @@
 const API_URL = 'http://localhost:3000';
 const socket = io();
-const myUserId = localStorage.getItem('userId'); 
+const myUserId = localStorage.getItem('userId');
 
-
+// Ouve por novas mensagens que chegam do servidor
 socket.on('receiveMessage', (message) => {
-    displayMessage(message, myUserId);
+    const chatSection = document.getElementById('mensagens');
+    if (chatSection.classList.contains('ativa')) {
+        displayMessage(message, myUserId);
+    }
 });
 
 
@@ -25,19 +28,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // 2. LÓGICA DA INTERFACE
 
-
 function mostrarSecao(id) {
     document.querySelectorAll('.secao').forEach(secao => {
         secao.classList.remove('ativa');
     });
     document.getElementById(id).classList.add('ativa');
-
     document.querySelectorAll('.sidebar li').forEach(li => {
         li.classList.remove('active');
     });
-    const menuIndex = {
-        'editarPerfil': 0, 'visaoGeral': 1, 'mensagens': 2, 'avaliacoes': 3
-    };
+    const menuIndex = { 'editarPerfil': 0, 'visaoGeral': 1, 'mensagens': 2, 'avaliacoes': 3 };
     const activeLi = document.querySelector(`.sidebar li:nth-child(${menuIndex[id] + 1})`);
     if (activeLi) {
         activeLi.classList.add('active');
@@ -45,12 +44,11 @@ function mostrarSecao(id) {
 }
 
 
-//  FUNÇÕES DE API E LÓGICA PRINCIPAL
+// 3. FUNÇÕES DE API E LÓGICA PRINCIPAL
 
-// FUNÇÃO PARA BUSCAR OS CONTATANTES QUE ENTRARAM EM CONTATO
+
 async function fetchMyContacts(token) {
-   
-    const listElement = document.getElementById('mensagens'); 
+    const listElement = document.getElementById('contact-list'); // Usaremos uma div separada para a lista de contatos
     
     try {
         const response = await fetch(`${API_URL}/api/my-contacts`, {
@@ -59,19 +57,20 @@ async function fetchMyContacts(token) {
         if (!response.ok) throw new Error('Falha ao buscar seus contatos.');
         const contractors = await response.json();
         
-        
+        listElement.innerHTML = ''; // Limpa a lista
         if (contractors.length === 0) {
-            listElement.innerHTML += '<p>Nenhum contratante entrou em contato com você ainda.</p>';
+            listElement.innerHTML = '<p>Nenhum contratante entrou em contato com você ainda.</p>';
+            return;
         }
+        
         contractors.forEach(c => {
             const contactHTML = `
-                <div class="avaliacao">
-                  <p><strong>Nome:</strong> ${c.nome_completo}</p>
-                  <p><strong>Necessidade:</strong> ${c.busca_servico || 'Não informado'}</p>
-                  <button onclick="initializeChat(${c.id})">Conversar</button>
+                <div class="contact-item" onclick="openChatWithUser(${c.id}, '${c.nome_completo}')">
+                    <p><strong>${c.nome_completo}</strong></p>
+                    <small>Busca por: ${c.busca_servico || 'Não informado'}</small>
                 </div>
             `;
-            
+            listElement.innerHTML += contactHTML;
         });
 
     } catch (error) {
@@ -79,6 +78,7 @@ async function fetchMyContacts(token) {
     }
 }
 
+// ✅ FUNÇÃO RE-ADICIONADA
 async function loadUserProfileForEditing(token, userId) {
     try {
         const response = await fetch(`${API_URL}/auth/users/${userId}`, {
@@ -103,6 +103,7 @@ async function loadUserProfileForEditing(token, userId) {
     }
 }
 
+// ✅ FUNÇÃO RE-ADICIONADA
 async function updateUserProfile(token, userId) {
     const formData = {
         nome: document.getElementById('editNome').value,
@@ -132,11 +133,10 @@ async function updateUserProfile(token, userId) {
     }
 }
 
+// ✅ FUNÇÃO RE-ADICIONADA
 async function deleteUserProfile(token, userId) {
     const isConfirmed = window.confirm("Você tem CERTEZA que deseja excluir seu perfil?\n\nEsta ação é irreversível e todos os seus dados serão perdidos.");
-    if (!isConfirmed) {
-        return;
-    }
+    if (!isConfirmed) return;
     try {
         const response = await fetch(`${API_URL}/auth/users/${userId}`, {
             method: 'DELETE',
@@ -156,9 +156,11 @@ async function deleteUserProfile(token, userId) {
     }
 }
 
-// FUNÇÕES DO CHAT 
+// --- FUNÇÕES DO CHAT ---
 function displayMessage(message, currentUserId) {
     const chatBox = document.getElementById('chat-messages');
+    const placeholder = chatBox.querySelector('.chat-placeholder');
+    if (placeholder) placeholder.remove();
     const messageDiv = document.createElement('div');
     const messageType = message.sender_id == currentUserId ? 'enviada' : 'recebida';
     messageDiv.className = `mensagem ${messageType}`;
@@ -168,18 +170,25 @@ function displayMessage(message, currentUserId) {
 }
 
 async function loadChatHistory(senderId, receiverId) {
-    document.getElementById('chat-messages').innerHTML = '';
+    document.getElementById('chat-messages').innerHTML = '<p class="chat-placeholder">Carregando histórico...</p>';
     try {
         const response = await fetch(`/api/chat/${senderId}/${receiverId}`);
         const history = await response.json();
-        history.forEach(message => displayMessage(message, senderId));
+        document.getElementById('chat-messages').innerHTML = '';
+        if (history.length === 0) {
+            document.getElementById('chat-messages').innerHTML = '<p class="chat-placeholder">Ainda não há mensagens. Envie a primeira!</p>';
+        } else {
+            history.forEach(message => displayMessage(message, senderId));
+        }
     } catch (error) {
         console.error("Erro ao carregar histórico:", error);
     }
 }
 
-function initializeChat(otherUserId) { 
+function initializeChat(otherUserId, otherUserName) {
     if (!myUserId || !otherUserId) return;
+    document.getElementById('chat-with-name').textContent = `Conversando com ${otherUserName}`;
+    document.querySelector('.chat-container').style.display = 'flex'; // Mostra o chat
 
     socket.emit('joinChat', { senderId: myUserId, receiverId: otherUserId });
     loadChatHistory(myUserId, otherUserId);
@@ -187,22 +196,26 @@ function initializeChat(otherUserId) {
     const sendButton = document.getElementById('send-message-btn');
     const messageInput = document.getElementById('chat-message-input');
     
-    // Evita adicionar múltiplos listeners ao botão
     const newSendButton = sendButton.cloneNode(true);
     sendButton.parentNode.replaceChild(newSendButton, sendButton);
 
     newSendButton.onclick = () => {
         const message = messageInput.value;
         if (message.trim()) {
-            socket.emit('sendMessage', {
-                senderId: myUserId,
-                receiverId: otherUserId,
-                message: message
-            });
+            socket.emit('sendMessage', { senderId: myUserId, receiverId: otherUserId, message: message });
             messageInput.value = '';
         }
     };
 }
+
+// Nova função para abrir o chat a partir da lista
+function openChatWithUser(userId, userName) {
+    mostrarSecao('mensagens');
+    initializeChat(userId, userName);
+}
+
+
+// 4. CONFIGURAÇÃO DOS EVENT LISTENERS
 
 
 function setupEventListeners(token, userId) {
@@ -212,7 +225,7 @@ function setupEventListeners(token, userId) {
         updateUserProfile(token, userId);
     });
 
-   
+    // Preview da Foto
     document.getElementById('editFoto').addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -231,7 +244,4 @@ function setupEventListeners(token, userId) {
             deleteUserProfile(token, userId);
         });
     }
-
-    
-    initializeChat(1); // Exemplo: Inicia chat com usuário de ID 1
 }
