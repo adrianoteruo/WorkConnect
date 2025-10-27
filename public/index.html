@@ -24,14 +24,12 @@
         <button class="tab-button" onclick="openTab('register')">Cadastro</button>
       </div>
 
-      <!-- Login -->
       <div id="login" class="tab-content active">
         <form id="login-form">
           <div class="input-group"> 
             <i class="fa-solid fa-user"></i>
             <input type="text" id="log-username" placeholder="Usuário" required>
           </div>
-
           <div class="input-group">
             <i class="fa-solid fa-lock"></i>
             <input type="password" id="log-password" placeholder="Senha" required>
@@ -41,7 +39,6 @@
         </form>
       </div>
 
-      <!-- Cadastro -->
       <div id="register" class="tab-content">
         <form id="register-form">
           
@@ -121,12 +118,19 @@
               <input type="text" id="estado" required>
             </div>
           </div>
+          
           <div id="blocoProfissional" style="display:none;">
             <hr />
             <label for="servico">Serviço Oferecido:</label>
             <input type="text" id="servico" placeholder="Ex: Manicure, Encanador...">
             <label for="descricao">Descrição do Serviço:</label>
             <textarea id="descricao" placeholder="Conte um pouco sobre seu trabalho"></textarea>
+          </div>
+
+          <div id="blocoContratante" style="display:none;">
+            <hr />
+            <label for="busca">Serviço que Você Busca:</label>
+            <input type="text" id="busca" placeholder="Ex: Eletricista, Babá...">
           </div>
 
           <button type="submit">Cadastrar</button>
@@ -137,53 +141,51 @@
         </form>
       </div>
 
-  <div class="status-section">
-    <p id="message"></p>
-  </div>
+      <div class="status-section">
+        <p id="message"></p>
+      </div>
 
-  
-  <div id="lgpdModal" class="modal">
-    <div class="modal-content">
-      <span class="close" onclick="closeLgpd()">&times;</span>
-      <h2>Política de Privacidade (LGPD)</h2>
-      <p>
-        Nós respeitamos sua privacidade e seguimos as diretrizes da LGPD. 
-        Seus dados serão utilizados apenas para fins de autenticação e 
-        funcionamento do sistema, podendo ser excluídos definitivamente a qualquer momento mediante solicitação.
-      </p>
-      <p>Para mais informações, entre em contato com nosso suporte.</p>
-    </div>
-  </div>
+      <div id="lgpdModal" class="modal">
+        <div class="modal-content">
+          <span class="close" onclick="closeLgpd()">&times;</span>
+          <h2>Política de Privacidade (LGPD)</h2>
+          <p>
+            Nós respeitamos sua privacidade e seguimos as diretrizes da LGPD. 
+            Seus dados serão utilizados apenas para fins de autenticação e 
+            funcionamento do sistema, podendo ser excluídos definitivamente a qualquer momento mediante solicitação.
+          </p>
+          <p>Para mais informações, entre em contato com nosso suporte.</p>
+        </div>
+      </div>
 
-  <script src="script.js"></script>
+      <script src="script.js"></script>
 
-  <script>
-    function openTab(tabName) {
-      const tabs = document.querySelectorAll(".tab-content");
-      const buttons = document.querySelectorAll(".tab-button");
+      <script>
+        function openTab(tabName) {
+          const tabs = document.querySelectorAll(".tab-content");
+          const buttons = document.querySelectorAll(".tab-button");
 
-      tabs.forEach(tab => tab.classList.remove("active"));
-      buttons.forEach(btn => btn.classList.remove("active"));
+          tabs.forEach(tab => tab.classList.remove("active"));
+          buttons.forEach(btn => btn.classList.remove("active"));
 
-      document.getElementById(tabName).classList.add("active");
-      event.target.classList.add("active");
-    }
+          document.getElementById(tabName).classList.add("active");
+          event.currentTarget.classList.add("active");
+        }
 
-    // LGPD Modal
-    function openLgpd() {
-      document.getElementById("lgpdModal").style.display = "flex";
-    }
+        function openLgpd() {
+          document.getElementById("lgpdModal").style.display = "flex";
+        }
 
-    function closeLgpd() {
-      document.getElementById("lgpdModal").style.display = "none";
-    }
+        function closeLgpd() {
+          document.getElementById("lgpdModal").style.display = "none";
+        }
 
-    window.onclick = function(event) {
-      const modal = document.getElementById("lgpdModal");
-      if (event.target === modal) {
-        modal.style.display = "none";
-      }
-    }
-  </script>
+        window.onclick = function(event) {
+          const modal = document.getElementById("lgpdModal");
+          if (event.target === modal) {
+            modal.style.display = "none";
+          }
+        }
+      </script>
 </body>
 </html>
