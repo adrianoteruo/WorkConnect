@@ -3,7 +3,6 @@ const API_URL = 'http://localhost:3000';
 document.addEventListener('DOMContentLoaded', () => {
     const token = localStorage.getItem('token');
     if (!token || localStorage.getItem('userRole') !== 'Admin') {
-        // Segurança: Se não for admin, chuta para o login
         localStorage.clear();
         window.location.href = '/';
         return;
@@ -13,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupEventListeners(token);
 });
 
-//  Carrega todos os usuários da API
+
 async function loadAllUsers(token) {
     const tableBody = document.getElementById('user-table-body');
     tableBody.innerHTML = '<tr><td colspan="6">Carregando...</td></tr>';
@@ -58,7 +57,7 @@ async function loadAllUsers(token) {
     }
 }
 
-//  Função do botão Excluir
+
 async function deleteUser(userId, userName) {
     const isConfirmed = confirm(`Você tem CERTEZA que deseja excluir o usuário "${userName}" (ID: ${userId})?\n\nEsta ação é irreversível.`);
     
@@ -86,7 +85,7 @@ async function deleteUser(userId, userName) {
     }
 }
 
-// Configura o botão de Logout
+
 function setupEventListeners(token) {
     const logoutButton = document.getElementById('logout-btn-sidebar');
     if (logoutButton) {
