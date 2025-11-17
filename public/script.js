@@ -38,7 +38,7 @@ if (tipoUsuario) {
     });
 }
 
-// CEP automático
+
 if (cepInput) {
     cepInput.addEventListener('blur', () => {
         const cep = cepInput.value.replace(/\D/g, '');
@@ -61,13 +61,11 @@ if (cepInput) {
 
 
 
-
-// Elementos do DOM
 const registerForm = document.getElementById('register-form');
 const loginForm = document.getElementById('login-form');
 const messageEl = document.getElementById('message');
 
-// Função para alternar entre abas
+
 function openTab(tabName) {
     const tabContents = document.getElementsByClassName('tab-content');
     for (let i = 0; i < tabContents.length; i++) {
@@ -87,7 +85,7 @@ function openTab(tabName) {
     }
 }
 
-// Cadastro de usuário 
+
 const registerUser = async (e) => {
     e.preventDefault();
     const lgpdCheckbox = document.getElementById('lgpd-consent');
@@ -95,7 +93,7 @@ const registerUser = async (e) => {
         showAlert('Você deve aceitar os Termos de Uso e a Política de Privacidade para continuar.', 'error');
         return; 
     }
-    // Coleta dados 
+
     const formData = {
         username: document.getElementById('reg-username').value,
         password: document.getElementById('reg-password').value,
@@ -147,7 +145,7 @@ const registerUser = async (e) => {
     }
 };
 
-// Login de usuário 
+
 const loginUser = async (e) => {
     e.preventDefault();
     const username = document.getElementById('log-username').value;
@@ -198,7 +196,7 @@ const loginUser = async (e) => {
     }
 };
 
-// Event Listeners 
+
 if (registerForm) {
     registerForm.addEventListener('submit', registerUser);
 }
@@ -219,14 +217,14 @@ function closeForgotModal() {
     forgotPasswordModal.style.display = 'none';
 }
 
-// Lida com o clique fora do modal (para o novo modal)
+
 window.addEventListener('click', (event) => {
     if (event.target === forgotPasswordModal) {
         closeForgotModal();
     }
 });
 
-// Envia o e-mail para a API
+
 forgotPasswordForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const email = forgotEmailInput.value;
