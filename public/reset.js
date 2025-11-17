@@ -1,4 +1,3 @@
-// Pega o token da URL
 const urlParams = new URLSearchParams(window.location.search);
 const token = urlParams.get('token');
 
@@ -40,13 +39,13 @@ resetForm.addEventListener('submit', async (e) => {
             messageEl.style.color = 'green';
             resetForm.style.display = 'none'; 
             
-            // Redireciona para o login 
+
             setTimeout(() => {
                 window.location.href = '/'; 
             }, 3000);
         
         } else {
-            // Se o token for inválido ou expirado
+
             messageEl.textContent = data.message;
             messageEl.style.color = 'red';
         }
