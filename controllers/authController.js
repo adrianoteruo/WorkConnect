@@ -1,7 +1,6 @@
-// controllers/authController.js
 const authService = require('../services/authService');
 
-// Lida com a rota POST /register
+
 const register = async (req, res) => {
     try {
         const user = await authService.register(req.body);
@@ -21,7 +20,7 @@ const register = async (req, res) => {
     }
 };
 
-// Lida com a rota POST /login
+
 const login = async (req, res) => {
     try {
         const { username, password } = req.body;
@@ -43,14 +42,14 @@ const login = async (req, res) => {
     }
 };
 
-// Lida com a rota GET /users/:id
+
 const getProfile = async (req, res) => {
     try {
         const requestedId = parseInt(req.params.id, 10);
         const tokenId = req.user.id;
         const tokenRole = req.user.role; 
 
-        //  Permite se for o dono ou se for Admin
+        //  Permite se for o usuário ou se for Admin
         if (requestedId !== tokenId && tokenRole !== 'Admin') {
             return res.status(403).json({ message: 'Acesso negado. Você só pode visualizar seu próprio perfil.' });
         }
@@ -67,14 +66,14 @@ const getProfile = async (req, res) => {
     }
 };
 
-// Lida com a rota PUT /users/:id
+
 const updateProfile = async (req, res) => {
     try {
         const requestedId = parseInt(req.params.id, 10);
         const tokenId = req.user.id;
         const tokenRole = req.user.role; 
 
-        // Permite se for o dono ou se for Admin
+        // Permite se for o usuário ou se for Admin
         if (requestedId !== tokenId && tokenRole !== 'Admin') {
             return res.status(403).json({ message: 'Acesso negado. Você só pode editar seu próprio perfil.' });
         }
@@ -94,14 +93,14 @@ const updateProfile = async (req, res) => {
     }
 };
 
-// Lida com a rota DELETE /users/:id
+
 const deleteProfile = async (req, res) => {
      try {
         const requestedId = parseInt(req.params.id, 10);
         const tokenId = req.user.id;
         const tokenRole = req.user.role; 
 
-        // Permite se for o dono ou se for Admin
+        // Permite se for o usuário ou se for Admin
         if (requestedId !== tokenId && tokenRole !== 'Admin') {
             return res.status(403).json({ message: 'Acesso negado. Você só pode excluir seu próprio perfil.' });
         }
@@ -118,7 +117,7 @@ const deleteProfile = async (req, res) => {
     }
 };
 
-// Lida com a rota POST /forgot-password
+
 const forgotPassword = async (req, res) => {
     try {
         const { email } = req.body;
@@ -130,7 +129,7 @@ const forgotPassword = async (req, res) => {
     }
 };
 
-// Lida com a rota POST /reset-password
+
 const resetPassword = async (req, res) => {
     try {
         const { token, newPassword } = req.body;
