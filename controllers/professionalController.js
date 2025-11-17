@@ -1,4 +1,3 @@
-// controllers/professionalController.js
 const professionalService = require('../services/professionalService');
 const serviceRepository = require('../repositories/serviceRepository');
 const evaluationRepository = require('../repositories/evaluationRepository');
@@ -16,22 +15,19 @@ const getProfessionals = async (req, res) => {
 
 
 const getProfessionalStats = async (req, res) => {
-    const profissionalId = req.user.id; // Pega o ID do profissional logado (via token)
+    const profissionalId = req.user.id; 
 
     try {
-        //  Busca os 3 dados em paralelo 
         const servicesQuery = serviceRepository.getCompletedServicesCount(profissionalId);
         const clientsQuery = serviceRepository.getDistinctClientsCount(profissionalId);
         const ratingQuery = evaluationRepository.getAverageRating(profissionalId);
 
-        //  Aguarda todos terminarem
         const [
             services_completed,
             clients_served,
             avg_rating
         ] = await Promise.all([servicesQuery, clientsQuery, ratingQuery]);
 
-        //  Monta a resposta
         const stats = {
             services_completed: services_completed,
             clients_served: clients_served,
