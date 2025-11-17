@@ -1,7 +1,6 @@
-// repositories/contactRepository.js
 const pool = require('../config/database');
 
-// Cria um novo registro de contato.
+
  
 const create = async (contratanteId, profissionalId) => {
     const sql = 'INSERT INTO contatos (contratante_id, profissional_id) VALUES (?, ?)';
@@ -9,7 +8,7 @@ const create = async (contratanteId, profissionalId) => {
     return result;
 };
 
-// Busca os contatos de um Profissional (para 'my-contacts').
+
 
 const findByProfessionalId = async (profissionalId) => {
     const sql = `
@@ -22,7 +21,7 @@ const findByProfessionalId = async (profissionalId) => {
     return contractors;
 };
 
-// Busca as conversas de um Contratante (para 'my-conversations').
+
  
 const findByContratanteId = async (contratanteId) => {
     const sql = `
