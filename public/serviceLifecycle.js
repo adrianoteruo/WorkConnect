@@ -1,4 +1,3 @@
-// Esta função principal busca o status e atualiza a UI
 async function updateServiceStatus(myId, myRole, otherUserId) {
     const statusBox = document.getElementById('service-status-box');
     if (!statusBox) return;
@@ -9,7 +8,6 @@ async function updateServiceStatus(myId, myRole, otherUserId) {
         return;
     }
 
-    //  Busca o status atual na API
     try {
         const response = await fetch(`${API_URL}/api/services/chat-status/${otherUserId}`, {
             headers: { 'Authorization': `Bearer ${token}` } 
@@ -18,7 +16,6 @@ async function updateServiceStatus(myId, myRole, otherUserId) {
         
         const service = await response.json();
         
-        //  Renderiza a UI correta baseado no status
         renderServiceUI(statusBox, service, token, myRole, otherUserId);
 
     } catch (error) {
@@ -27,7 +24,6 @@ async function updateServiceStatus(myId, myRole, otherUserId) {
     }
 }
 
-// Esta função decide qual HTML/botão mostrar
 function renderServiceUI(statusBox, service, token, myRole, otherUserId) {
     const serviceId = service.id;
     const myId = localStorage.getItem('userId'); 
@@ -91,7 +87,6 @@ function renderServiceUI(statusBox, service, token, myRole, otherUserId) {
 }
 
 
-//  Contratante propõe
 async function proposeService(token, profissionalId) {
     try {
         const response = await fetch(`${API_URL}/api/services`, {
@@ -112,7 +107,6 @@ async function proposeService(token, profissionalId) {
     }
 }
 
-//  Profissional aprova
 async function approveService(token, serviceId) {
     try {
         const response = await fetch(`${API_URL}/api/services/${serviceId}/approve`, {
@@ -132,7 +126,7 @@ async function approveService(token, serviceId) {
     }
 }
 
-//  Qualquer um solicita conclusão
+
 async function requestCompletion(token, serviceId) {
     try {
         const response = await fetch(`${API_URL}/api/services/${serviceId}/request-complete`, {
@@ -142,7 +136,6 @@ async function requestCompletion(token, serviceId) {
         if (!response.ok) throw new Error(result.message);
         
         alert(result.message);
-        // Dispara o evento de atualização 
         const myUserId = localStorage.getItem('userId');
         const otherUserId = currentChatPartnerId;
         socket.emit('serviceStatusChanged', { senderId: myUserId, otherUserId });
@@ -152,7 +145,7 @@ async function requestCompletion(token, serviceId) {
     }
 }
 
-//  O outro confirma a conclusão
+
 async function confirmCompletion(token, serviceId) {
     try {
         const response = await fetch(`${API_URL}/api/services/${serviceId}/confirm-complete`, {
@@ -162,7 +155,6 @@ async function confirmCompletion(token, serviceId) {
         if (!response.ok) throw new Error(result.message);
         
         alert(result.message);
-        // Dispara o evento de atualização 
         const myUserId = localStorage.getItem('userId');
         const otherUserId = currentChatPartnerId;
         socket.emit('serviceStatusChanged', { senderId: myUserId, otherUserId });
@@ -172,7 +164,7 @@ async function confirmCompletion(token, serviceId) {
     }
 }
 
-//  Botão "Avaliar" 
+
 async function rateCompletedService(token, serviceId, evaluatedId) {
    
     const evaluatedName = document.getElementById('chat-with-name').textContent.replace('Conversando com ', '');
