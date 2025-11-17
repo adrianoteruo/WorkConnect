@@ -1,18 +1,17 @@
-// controllers/serviceController.js
 const serviceService = require('../services/serviceService');
 
-// Lida com erros comuns dos serviços
+
 const handleServiceError = (res, error) => {
     console.error("Erro no ServiceController:", error.message);
     
     if (error.message.includes('Já existe')) {
         return res.status(409).json({ message: error.message });
     }
-    // Checa o erro 403 
+
     if (error.message.includes('não pode confirmar')) {
         return res.status(403).json({ message: error.message });
     }
-    // Checa o erro 404 (
+
     if (error.message.includes('não encontrada') || error.message.includes('não está ativo')) {
         return res.status(404).json({ message: error.message });
     }
