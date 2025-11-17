@@ -59,21 +59,6 @@ if (cepInput) {
     });
 }
 
-// Lógica da Foto 
-if (fotoInput) {
-    fotoInput.addEventListener('change', () => {
-        if (fotoInput.files.length > 0) {
-            const fileName = fotoInput.files[0].name;
-            
-            const label = document.querySelector(`label[for='${fotoInput.id}']`);
-            if(label) {
-                label.textContent = `Foto de Perfil: (${fileName})`;
-            }
-        }
-    });
-}
-
-
 
 
 
