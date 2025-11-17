@@ -3,42 +3,38 @@ const socket = io();
 const myUserId = localStorage.getItem('userId');
 let currentChatPartnerId = null;
 
-// Ouve por novas mensagens que chegam do servidor
+
 socket.on('receiveMessage', (message) => {
     const numMyUserId = parseInt(myUserId, 10);
     const numCurrentChatPartnerId = parseInt(currentChatPartnerId, 10);
     const numMessageSenderId = parseInt(message.sender_id, 10);
 
-    // 1. A mensagem é minha? Se sim, ignora.
+
     if (numMessageSenderId === numMyUserId) {
         return;
     }
 
-    // 2. A mensagem é da pessoa com quem estou conversando?
     if (numMessageSenderId === numCurrentChatPartnerId) {
         displayMessage(message, numMyUserId);
     } else {
-        // 3. É uma mensagem de outra pessoa (não estou vendo o chat dela)
         console.log("Notificação: Nova mensagem de outro usuário.");
     }
 });
 
-// Ouve pela atualização de status do serviço vinda do servidor
+
 socket.on('updateServiceStatus', () => {
     console.log("Recebido evento de atualização de status do serviço.");
     
-    // Verifica se estamos com um chat aberto
+
     if (currentChatPartnerId) {
         const myRole = localStorage.getItem('userRole');
         
-        // Simplesmente recarrega o painel de status
-        // (A função updateServiceStatus está em serviceLifecycle.js)
         updateServiceStatus(myUserId, myRole, currentChatPartnerId);
     }
 });
 
 
-// 1. INICIALIZAÇÃO
+
 document.addEventListener('DOMContentLoaded', () => {
     const token = localStorage.getItem('token');
     if (!token || !myUserId) {
@@ -46,18 +42,17 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    // Passa o token para as funções que só rodam 1 vez no carregamento
+
     fetchAllProfessionals(token);
     fetchMyContacts(token); 
     loadUserProfileForEditing(token, myUserId);
     fetchMyEvaluations(token);
     
-    // O setup usa o token para as funções de perfil (update/delete)
     setupEventListeners(token, myUserId);
 });
 
 
-// 2. LÓGICA DA INTERFACE
+
 function mostrarSecao(id) {
     document.querySelectorAll('.secao').forEach(secao => {
         secao.classList.remove('ativa');
@@ -74,14 +69,13 @@ function mostrarSecao(id) {
 }
 
 
-// 3. FUNÇÕES DE API E LÓGICA PRINCIPAL
+
 
 async function fetchAllProfessionals(token, searchTerm = '') {
     const container = document.querySelector('#visaoGeral .cards');
     try {
         let apiUrl = `${API_URL}/api/professionals`;
         
-        // Se houver um termo de busca, adiciona à URL
         if (searchTerm) {
             apiUrl += `?search=${encodeURIComponent(searchTerm)}`;
         }
@@ -294,21 +288,20 @@ async function initiateContactAndChat(professionalId, professionalName) {
     }
 }
 
-// Abre o chat a partir da lista de contatos
+
 function openChatWithUser(userId, userName) {
     document.querySelector('.chat-container').style.display = 'flex';
     initializeChat(userId, userName);
 }
 
 
-// --- FUNÇÕES DO CHAT ---
+
 
 function displayMessage(message, currentUserId) {
     const chatBox = document.getElementById('chat-messages');
     const placeholder = chatBox.querySelector('.chat-placeholder');
     if (placeholder) placeholder.remove();
     const messageDiv = document.createElement('div');
-    // Assegura que a comparação é de números
     const messageType = parseInt(message.sender_id, 10) === parseInt(currentUserId, 10) ? 'enviada' : 'recebida';
     messageDiv.className = `mensagem ${messageType}`;
     messageDiv.innerHTML = `<strong>${messageType === 'enviada' ? 'Você' : 'Outro'}:</strong> ${message.message_text}`;
@@ -360,16 +353,13 @@ function initializeChat(otherUserId, otherUserName) {
     if (!myUserId || !otherUserId) return;
     document.getElementById('chat-with-name').textContent = `Conversando com ${otherUserName}`;
     
-    // 1. Entra na sala
+
     socket.emit('joinChat', { senderId: myUserId, receiverId: otherUserId });
     
-    // 2. Carrega o histórico (sem passar o token)
     loadChatHistory(myUserId, otherUserId); 
     
-    // 3. Atualiza o status do serviço (sem passar o token)
     updateServiceStatus(myUserId, myRole, otherUserId);
-    
-    // 4. Configura o botão de enviar
+
     const sendButton = document.getElementById('send-message-btn');
     const messageInput = document.getElementById('chat-message-input');
     
@@ -399,18 +389,16 @@ function initializeChat(otherUserId, otherUserName) {
     };
 }
 
-//  CONFIGURAÇÃO DOS EVENT LISTENERS
-
 
 function setupEventListeners(token, userId) {
-    // Formulário de Edição
+
     document.getElementById('formEditarPerfil').addEventListener('submit', (e) => {
         e.preventDefault();
         updateUserProfile(token, userId);
     });
 
 
-    // Botão de Excluir
+
     const deleteButton = document.getElementById('btnExcluirPerfil');
     if (deleteButton) {
         deleteButton.addEventListener('click', () => {
@@ -457,12 +445,11 @@ function setupEventListeners(token, userId) {
     if (searchBtn && searchInput) {
         searchBtn.addEventListener('click', () => {
             const searchTerm = searchInput.value.trim();
-            // Pega o token para a nova busca
+
             const token = localStorage.getItem('token'); 
             fetchAllProfessionals(token, searchTerm);
         });
 
-        //  Faz a busca ao pressionar "Enter"
         searchInput.addEventListener('keyup', (event) => {
             if (event.key === 'Enter') {
                 searchBtn.click(); 
@@ -470,7 +457,7 @@ function setupEventListeners(token, userId) {
         });
     }
 
-    // Cards de Profissionais (para iniciar o chat)
+
     const professionalsContainer = document.querySelector('#visaoGeral .cards');
     if (professionalsContainer) {
         professionalsContainer.addEventListener('click', (event) => {
@@ -483,7 +470,7 @@ function setupEventListeners(token, userId) {
 
                 const professionalName = card.dataset.professionalName;
                 
-                // Chama a nova função (sem passar o token)
+
                 initiateContactAndChat(professionalId, professionalName);
             }
         });
