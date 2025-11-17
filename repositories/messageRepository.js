@@ -1,7 +1,5 @@
-// repositories/messageRepository.js
 const pool = require('../config/database');
 
-// Busca o histórico de chat entre dois usuários.
 const findChatHistory = async (user1_id, user2_id) => {
     const sql = `
         SELECT * FROM messages 
