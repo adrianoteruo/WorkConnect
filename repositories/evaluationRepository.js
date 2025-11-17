@@ -1,7 +1,5 @@
-// repositories/evaluationRepository.js
 const pool = require('../config/database');
 
-// Cria uma nova avaliação.
 const create = async (evaluatorId, evaluated_id, rating, comment) => {
     const sql = `
         INSERT INTO evaluations (evaluator_id, evaluated_id, rating, comment) 
@@ -10,7 +8,7 @@ const create = async (evaluatorId, evaluated_id, rating, comment) => {
     await pool.execute(sql, [evaluatorId, evaluated_id, rating, comment || '']);
 };
 
-// Busca todas as avaliações que um usuário recebeu.
+
 const findByEvaluatedId = async (evaluatedId) => {
     const sql = `
         SELECT e.rating, e.comment, e.created_at, u.nome_completo AS evaluator_name 
