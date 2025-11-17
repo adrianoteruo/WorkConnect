@@ -7,7 +7,7 @@ const blocoProfissional = document.getElementById('blocoProfissional');
 const blocoContratante = document.getElementById('blocoContratante');
 
 
-const fotoInput = document.getElementById('foto');
+
 const nomeInput = document.getElementById('nome');
 const emailInput = document.getElementById('email');
 const telefoneInput = document.getElementById('telefone');
