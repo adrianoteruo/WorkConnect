@@ -3,7 +3,7 @@ const socket = io();
 const myUserId = localStorage.getItem('userId');
 let currentChatPartnerId = null;
 
-// Ouve por novas mensagens que chegam do servidor
+
 socket.on('receiveMessage', (message) => {
     const numMyUserId = parseInt(myUserId, 10);
     const numCurrentChatPartnerId = parseInt(currentChatPartnerId, 10);
@@ -20,11 +20,11 @@ socket.on('receiveMessage', (message) => {
     }
 });
 
-// Ouve pela atualização de status do serviço vinda do servidor
+
 socket.on('updateServiceStatus', () => {
     console.log("Recebido evento de atualização de status do serviço.");
     
-    // Verifica se estamos com um chat aberto
+
     if (currentChatPartnerId) {
         const myRole = localStorage.getItem('userRole');
         updateServiceStatus(myUserId, myRole, currentChatPartnerId);
@@ -32,7 +32,7 @@ socket.on('updateServiceStatus', () => {
 });
 
 
-// 1. INICIALIZAÇÃO
+
 document.addEventListener('DOMContentLoaded', () => {
     const token = localStorage.getItem('token');
     if (!token || !myUserId) {
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-// 2. LÓGICA DA INTERFACE
+
 function mostrarSecao(id) {
     document.querySelectorAll('.secao').forEach(secao => {
         secao.classList.remove('ativa');
@@ -66,15 +66,13 @@ function mostrarSecao(id) {
 }
 
 
-//  FUNÇÕES DE API E LÓGICA PRINCIPAL
 
-//meus contatos
 async function fetchMyContacts(token) {
     const listElement = document.getElementById('contact-list');
     if (!listElement) return;
 
     try {
-        // Rota correta para o profissional
+
         const response = await fetch(`${API_URL}/api/my-contacts`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -102,7 +100,7 @@ async function fetchMyContacts(token) {
     }
 }
 
-// avaliações
+
 async function fetchMyEvaluations(token) {
     const container = document.getElementById('avaliacoes'); 
     if (!container) return;
@@ -140,7 +138,7 @@ async function fetchMyEvaluations(token) {
     }
 }
 
-// estatus do serviço
+
 async function fetchProfessionalStats(token) {
     try {
         const response = await fetch(`${API_URL}/api/professional-stats`, {
@@ -168,7 +166,7 @@ async function fetchProfessionalStats(token) {
     }
 }
 
-// edição de perfil
+
 async function loadUserProfileForEditing(token, userId) {
     try {
         const response = await fetch(`${API_URL}/auth/users/${userId}`, {
@@ -221,7 +219,7 @@ async function updateUserProfile(token, userId) {
         console.error('Erro ao atualizar perfil:', error);
     }
 }
-// deletar usuario 
+
 async function deleteUserProfile(token, userId) {
 
     if (!confirm("Você tem CERTEZA que deseja excluir seu perfil?\n\nEsta ação é irreversível.")) {
@@ -247,14 +245,13 @@ async function deleteUserProfile(token, userId) {
     }
 }
 
-// Abre o chat a partir da lista de contatos
+
 function openChatWithUser(userId, userName) {
     document.querySelector('.chat-container').style.display = 'flex';
     initializeChat(userId, userName);
 }
 
 
-//  FUNÇÕES DO CHAT 
 
 function displayMessage(message, currentUserId) {
     const chatBox = document.getElementById('chat-messages');
@@ -268,7 +265,7 @@ function displayMessage(message, currentUserId) {
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-// carrega o chat
+
 async function loadChatHistory(senderId, receiverId) {
     const chatBox = document.getElementById('chat-messages');
     chatBox.innerHTML = '<p class="chat-placeholder">Carregando histórico...</p>'; 
@@ -305,7 +302,6 @@ async function loadChatHistory(senderId, receiverId) {
     }
 }
 
-//  inicializa o chat 
 function initializeChat(otherUserId, otherUserName) {
     currentChatPartnerId = otherUserId;
     const myRole = localStorage.getItem('userRole');
@@ -315,17 +311,13 @@ function initializeChat(otherUserId, otherUserName) {
     
 
     document.querySelector('.chat-container').style.display = 'flex';
-    
-    //  Entra na sala
+
     socket.emit('joinChat', { senderId: myUserId, receiverId: otherUserId });
     
-    //  Carrega o histórico (sem passar o token)
     loadChatHistory(myUserId, otherUserId); 
-    
-    //  Atualiza o status do serviço (sem passar o token)
+
     updateServiceStatus(myUserId, myRole, otherUserId);
     
-    //  Configura o botão de enviar
     const sendButton = document.getElementById('send-message-btn');
     const messageInput = document.getElementById('chat-message-input');
     
@@ -355,16 +347,15 @@ function initializeChat(otherUserId, otherUserName) {
     };
 }
 
-// 4. CONFIGURAÇÃO DOS EVENT LISTENERS
+
 
 function setupEventListeners(token, userId) {
-    // Formulário de Edição
     document.getElementById('formEditarPerfil').addEventListener('submit', (e) => {
         e.preventDefault();
         updateUserProfile(token, userId);
     });
     
-    // Botão de Excluir
+
     const deleteButton = document.getElementById('btnExcluirPerfil');
     if (deleteButton) {
         deleteButton.addEventListener('click', () => {
@@ -372,7 +363,6 @@ function setupEventListeners(token, userId) {
         });
     }
 
-    // Botão de Logout (Sidebar)
     const logoutButton = document.getElementById('logout-btn-sidebar');
     if (logoutButton) {
         logoutButton.addEventListener('click', () => {
@@ -381,7 +371,7 @@ function setupEventListeners(token, userId) {
         });
     }
 
-    // Listener do ViaCEP
+
     const cepInputEdit = document.getElementById('editCEP');
     if (cepInputEdit) {
         cepInputEdit.addEventListener('blur', () => {
