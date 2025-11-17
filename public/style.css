@@ -1,4 +1,4 @@
-/* ---------- RESET GLOBAL ---------- */
+
 * {
   margin: 0;
   padding: 0;
@@ -14,14 +14,14 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* ---------- LAYOUT PRINCIPAL ---------- */
+
 .layout {
   display: flex;
   min-height: 100vh;
   overflow: hidden;
 }
 
-/* ---------- BRANDING / LADO ESQUERDO ---------- */
+
 .branding {
   flex: 2;
   background: linear-gradient(135deg, #0056d2, #00c2cb);
@@ -56,7 +56,7 @@ body {
   line-height: 1.6;
 }
 
-/* ---------- CONTAINER / FORMULÁRIO ---------- */
+
 .container {
   flex: 1;
   background: #fff;
@@ -75,7 +75,7 @@ body {
   box-shadow: -5px 0 30px rgba(0,0,0,0.12);
 }
 
-/* ---------- TABS ---------- */
+
 .tabs {
   display: flex;
   margin-bottom: 2rem;
@@ -103,7 +103,7 @@ body {
   border-bottom: 3px solid #0056d2;
 }
 
-/* ---------- CONTEÚDO DAS TABS ---------- */
+
 .tab-content {
   display: none;
   animation: fadeIn 0.4s ease;
@@ -118,7 +118,7 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* ---------- CAMPOS ---------- */
+
 .input-group {
   display: flex;
   align-items: center;
@@ -155,7 +155,6 @@ body {
   color: #0056d2;
 }
 
-/* ---------- BOTÕES ---------- */
 button {
   padding: 0.95rem;
   border: none;
@@ -175,7 +174,7 @@ button:hover {
   box-shadow: 0 4px 10px rgba(0,86,210,0.2);
 }
 
-/* ---------- TEXTO AUXILIAR ---------- */
+
 .hint {
   text-align: center;
   margin-top: 1rem;
@@ -193,7 +192,7 @@ button:hover {
   text-decoration: underline;
 }
 
-/* ---------- MODAL LGPD ---------- */
+
 .modal {
   display: none; 
   position: fixed;
@@ -230,7 +229,7 @@ button:hover {
   color: #333;
 }
 
-/* ---------- LGPD FOOTER ---------- */
+
 .lgpd {
   text-align: center;
   margin-top: 1rem;
@@ -248,7 +247,6 @@ button:hover {
   text-decoration: underline;
 }
 
-/* ---------- HEADER ---------- */
 header {
   background: linear-gradient(90deg, #1e3c72, #2a5298);
   color: #fff;
@@ -273,7 +271,7 @@ nav a:hover {
   opacity: 0.8;
 }
 
-/* ---------- CADASTRO ---------- */
+
 .cadastro {
   padding: 50px 0;
 }
@@ -328,7 +326,7 @@ form button:hover {
   background-color: #023173;
 }
 
-/* ---------- FOOTER ---------- */
+
 footer {
   background-color: #2a5298;
   color: #fff;
@@ -337,7 +335,7 @@ footer {
   margin-top: 40px;
 }
 
-/* ---------- GRID / UTILITÁRIOS ---------- */
+
 .row {
   display: flex;
   flex-wrap: wrap;
@@ -357,7 +355,7 @@ select {
   margin-bottom: 10px;
 }
 
-/* ---------- RESPONSIVIDADE LEVE ---------- */
+
 @media (max-width: 900px) {
   .layout {
     flex-direction: column;
@@ -381,19 +379,19 @@ select {
 
 .form-group-lgpd {
     display: flex;
-    align-items: center; /* Alinha o checkbox com o texto */
+    align-items: center; 
     margin-bottom: 20px;
-    gap: 10px; /* Espaço entre o checkbox e o texto */
+    gap: 10px; 
 }
 
 .form-group-lgpd input[type="checkbox"] {
-    /* Faz o checkbox não ficar gigante */
+
     width: auto; 
     margin: 0;
 }
 
 .form-group-lgpd label {
-    font-size: 0.9rem; /* Texto um pouco menor */
+    font-size: 0.9rem; 
     color: #555;
     cursor: pointer;
 }
