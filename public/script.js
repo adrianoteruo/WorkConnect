@@ -7,7 +7,7 @@ const blocoProfissional = document.getElementById('blocoProfissional');
 const blocoContratante = document.getElementById('blocoContratante');
 
 
-const fotoInput = document.getElementById('foto');
+
 const nomeInput = document.getElementById('nome');
 const emailInput = document.getElementById('email');
 const telefoneInput = document.getElementById('telefone');
@@ -58,21 +58,6 @@ if (cepInput) {
         }
     });
 }
-
-// Lógica da Foto 
-if (fotoInput) {
-    fotoInput.addEventListener('change', () => {
-        if (fotoInput.files.length > 0) {
-            const fileName = fotoInput.files[0].name;
-            
-            const label = document.querySelector(`label[for='${fotoInput.id}']`);
-            if(label) {
-                label.textContent = `Foto de Perfil: (${fileName})`;
-            }
-        }
-    });
-}
-
 
 
 

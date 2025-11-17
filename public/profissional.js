@@ -363,19 +363,7 @@ function setupEventListeners(token, userId) {
         e.preventDefault();
         updateUserProfile(token, userId);
     });
-
-    // Preview da Foto
-    document.getElementById('editFoto').addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                document.getElementById('previewFoto').src = event.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-
+    
     // Botão de Excluir
     const deleteButton = document.getElementById('btnExcluirPerfil');
     if (deleteButton) {
