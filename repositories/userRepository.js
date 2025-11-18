@@ -1,7 +1,5 @@
-// repositories/userRepository.js
 const pool = require('../config/database');
 
-// Busca um usuário pelo username OU email.
 
 const findByEmailOrUsername = async (username, email) => {
     const [users] = await pool.execute(
@@ -11,20 +9,18 @@ const findByEmailOrUsername = async (username, email) => {
     return users;
 };
 
-// Busca um usuário apenas pelo e-mail. Usado pelo 'forgot-password'.
  
 const findByEmail = async (email) => {
     const [users] = await pool.execute('SELECT * FROM users WHERE email = ?', [email]);
     return users[0] || null;
 };
 
-// Busca um usuário apenas pelo ID.
 const findById = async (id) => {
     const [users] = await pool.execute('SELECT * FROM users WHERE id = ?', [id]);
     return users[0] || null;
 };
 
-//Cria um novo usuário no banco de dados.
+
 const create = async (userData) => {
     const {
         username,
@@ -66,14 +62,13 @@ const create = async (userData) => {
     return { id: result.insertId };
 };
 
-// Atualiza um usuário no banco de dados.
+
 const update = async (id, fieldsToUpdate) => {
-    // Gera a parte SET da query dinamicamente
+
     const fieldEntries = Object.entries(fieldsToUpdate); 
     const setClause = fieldEntries.map(([key]) => `${key} = ?`).join(', ');
     const values = fieldEntries.map(([, value]) => value);
     
-    // Adiciona o ID ao final do array de valores para o 'WHERE'
     values.push(id);
 
     const sql = `UPDATE users SET ${setClause} WHERE id = ?`;
@@ -81,13 +76,13 @@ const update = async (id, fieldsToUpdate) => {
     return result.affectedRows;
 };
 
-//Deleta um usuário do banco.
+
 const remove = async (id) => {
     const [result] = await pool.execute('DELETE FROM users WHERE id = ?', [id]);
     return result.affectedRows;
 };
 
-//Salva o token de redefinição de senha.
+
 const saveResetToken = async (id, token, expires) => {
     const [result] = await pool.execute(
         'UPDATE users SET reset_token = ?, reset_token_expires = ? WHERE id = ?',
@@ -96,7 +91,7 @@ const saveResetToken = async (id, token, expires) => {
     return result.affectedRows;
 };
 
-// Busca um usuário pelo token de redefinição (e checa a validade).
+
 const findByResetToken = async (token) => {
     const [users] = await pool.execute(
         'SELECT * FROM users WHERE reset_token = ? AND reset_token_expires > NOW()',
@@ -105,7 +100,7 @@ const findByResetToken = async (token) => {
     return users[0] || null;
 };
 
-//Salva a nova senha e limpa o token de redefinição.
+
  
 const updatePasswordAndClearToken = async (id, hashedPassword) => {
     const [result] = await pool.execute(
@@ -115,7 +110,7 @@ const updatePasswordAndClearToken = async (id, hashedPassword) => {
     return result.affectedRows;
 };
 
-// Busca todos os usuários com o perfil 'Profissional'.
+
  
 const findAllProfessionals = async () => {
     const sql = `
@@ -127,7 +122,7 @@ const findAllProfessionals = async () => {
     return professionals;
 };
 
-// Busca Profissionais filtrando por nome ou serviço (para o search).
+
 const findProfessionalsByNameOrService = async (search) => {
     const sql = `
         SELECT id, nome_completo, servico_oferecido, descricao_servico, email, telefone 
@@ -141,7 +136,7 @@ const findProfessionalsByNameOrService = async (search) => {
 };
 
 const findAll = async () => {
-    // Exclui senhas e tokens da consulta
+
     const [users] = await pool.execute(
         'SELECT id, username, role, nome_completo, email FROM users ORDER BY nome_completo ASC'
     );
