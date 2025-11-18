@@ -1,15 +1,14 @@
-// services/evaluationService.js
 const evaluationRepository = require('../repositories/evaluationRepository');
 const serviceRepository = require('../repositories/serviceRepository');
 
 const createEvaluation = async (evaluatorId, evaluated_id, rating, comment) => {
-    // Validação de nota
+
     const numRating = parseInt(rating, 10);
     if (!evaluated_id || !numRating || numRating < 1 || numRating > 5) {
         throw new Error('O ID do usuário avaliado e uma nota entre 1 e 5 são obrigatórios.');
     }
 
-    // Lógica de Negócio: Trava de serviço concluído
+
     const completedServices = await serviceRepository.findCompletedBetweenUsers(evaluatorId, evaluated_id);
     if (completedServices.length === 0) {
         throw new Error('Avaliação negada. Você só pode avaliar um usuário após a conclusão de um serviço mútuo.');
