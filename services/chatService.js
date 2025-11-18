@@ -1,4 +1,3 @@
-// services/chatService.js
 const messageRepository = require('../repositories/messageRepository');
 
 const getChatHistory = (user1_id, user2_id) => {
