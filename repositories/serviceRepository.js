@@ -1,7 +1,5 @@
-// repositories/serviceRepository.js
 const pool = require('../config/database');
 
-// Busca o serviço mais recente entre dois usuários.
 
 const findLatestByUserIds = async (contratanteId, profissionalId) => {
     const sql = `
@@ -15,7 +13,7 @@ const findLatestByUserIds = async (contratanteId, profissionalId) => {
     return services[0] || null;
 };
 
-// Verifica se já existe um serviço 'pending' ou 'active'.
+
  
 const findActiveOrPending = async (contratanteId, profissionalId) => {
     const [existing] = await pool.execute(
@@ -27,14 +25,13 @@ const findActiveOrPending = async (contratanteId, profissionalId) => {
     return existing;
 };
 
-// Cria uma nova proposta de serviço.
+
 const create = async (contratanteId, profissionalId) => {
     const sql = 'INSERT INTO services (contratante_id, profissional_id, status) VALUES (?, ?, ?)';
     const [result] = await pool.execute(sql, [contratanteId, profissionalId, 'pending']);
     return result.insertId;
 };
 
-// Profissional aprova o serviço.
 
 const approve = async (serviceId, profissionalId) => {
     const sql = `
@@ -46,7 +43,7 @@ const approve = async (serviceId, profissionalId) => {
     return result.affectedRows;
 };
 
-// Usuário solicita a conclusão.
+
 
 const requestCompletion = async (serviceId, userId) => {
     const sql = `
@@ -60,7 +57,7 @@ const requestCompletion = async (serviceId, userId) => {
     return result.affectedRows;
 };
 
-// Outro usuário confirma a conclusão.
+
 
 const confirmCompletion = async (serviceId, userId) => {
     const sql = `
@@ -75,7 +72,7 @@ const confirmCompletion = async (serviceId, userId) => {
     return result.affectedRows;
 };
 
-// Verifica se existe um serviço concluído entre dois usuários.
+
  
 const findCompletedBetweenUsers = async (userA, userB) => {
     const sql = `
