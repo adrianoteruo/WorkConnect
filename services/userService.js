@@ -1,4 +1,3 @@
-// services/userService.js
 const userRepository = require('../repositories/userRepository');
 
 const getAllUsers = async () => {
