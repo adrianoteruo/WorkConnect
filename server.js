@@ -5,18 +5,16 @@ const pool = require('./config/database');
 
 const port = process.env.PORT || 3000;
 
-// Cria o servidor HTTP usando o app Express
+
 const server = http.createServer(app);
 
-// Inicia o Socket.io
 const io = new Server(server);
 
-// Lógica do Socket.io 
+
 io.on('connection', (socket) => {
     console.log('Um usuário se conectou:', socket.id);
 
     socket.on('joinChat', ({ senderId, receiverId }) => {
-        // ... (seu código joinChat)
         const id1 = parseInt(senderId, 10);
         const id2 = parseInt(receiverId, 10);
         const roomName = [id1, id2].sort((a, b) => a - b).join('-');
@@ -57,7 +55,7 @@ io.on('connection', (socket) => {
     });
 });
 
-// Inicia o servidor http
+
 server.listen(port, () => {
     console.log(`Servidor rodando em http://localhost:${port}`);
 });
