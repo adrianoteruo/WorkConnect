@@ -8,10 +8,10 @@ const dbConfig = {
     database: 'workconnect_test'
 };
 
-// Criar pool de conexões
+
 const pool = mysql.createPool(dbConfig);
 
-// Testar a conexão
+
 async function testConnection() {
     try {
         const connection = await pool.getConnection();
