@@ -4,10 +4,9 @@ const pool = require('./config/database');
 
 const app = express();
 
-// Importa os middlewares
 const { verifyToken } = require('./middleware/authMiddleware');
 
-// Importa as novas rotas
+
 const authRoutes = require('./routes/authRoutes');
 const professionalRoutes = require('./routes/professionalRoutes');
 const contactRoutes = require('./routes/contactRoutes');
@@ -16,11 +15,11 @@ const evaluationRoutes = require('./routes/evaluationRoutes');
 const chatRoutes = require('./routes/chatRoutes');
 const userRoutes = require('./routes/userRoutes'); 
 
-// Middleware
+
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Configuração do CORS 
+
 app.use((req, res, next) => {
     const allowedOrigins = ['http://localhost:3000', 'http://127.0.0.1:3000'];
     const origin = req.headers.origin;
@@ -36,7 +35,7 @@ app.use((req, res, next) => {
     next();
 });
 
-// Definição das Rotas 
+
 app.use('/auth', authRoutes); 
 
 app.use('/api', verifyToken); 
@@ -47,7 +46,7 @@ app.use('/api', evaluationRoutes);
 app.use('/api', chatRoutes);
 app.use('/api', userRoutes);
 
-//  Rotas de HTML 
+
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
@@ -64,5 +63,5 @@ app.get('/reset-password.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'reset-password.html'));
 });
 
-// EXPORTA O APP 
+
 module.exports = app;
