@@ -1,4 +1,3 @@
-// services/serviceService.js
 const serviceRepository = require('../repositories/serviceRepository');
 
 const proposeService = async (contratanteId, profissionalId) => {
