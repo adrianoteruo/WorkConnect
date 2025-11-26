@@ -1,1 +1,1 @@
-module.exports = 'token_workconnect';
+module.exports = process.env.JWT_SECRET;
