@@ -80,9 +80,25 @@ const updateProfile = async (userId, fieldsToUpdate) => {
         delete updateData.nome; 
     }
 
+    if (updateData.servico) {
+        updateData.servico_oferecido = updateData.servico;
+        delete updateData.servico;
+    }
+
+
+    if (updateData.descricao) {
+        updateData.descricao_servico = updateData.descricao;
+        delete updateData.descricao;
+    }
+
+    if (updateData.busca) {
+        updateData.busca_servico = updateData.busca;
+        delete updateData.busca;
+    }
+
+
     const { password, ...otherFields } = updateData;
     let finalUpdateData = otherFields;
-
 
     if (password) {
         const saltRounds = 10;
@@ -93,7 +109,6 @@ const updateProfile = async (userId, fieldsToUpdate) => {
     if (Object.keys(finalUpdateData).length === 0) {
         throw new Error('Nenhum dado para atualizar foi fornecido.');
     }
-
 
     const affectedRows = await userRepository.update(userId, finalUpdateData);
     if (affectedRows === 0) {
