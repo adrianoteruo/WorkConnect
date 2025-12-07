@@ -114,9 +114,19 @@ const updatePasswordAndClearToken = async (id, hashedPassword) => {
  
 const findAllProfessionals = async () => {
     const sql = `
-        SELECT id, nome_completo, servico_oferecido, descricao_servico, email, telefone 
-        FROM users 
-        WHERE role = ?
+        SELECT 
+            u.id, 
+            u.nome_completo, 
+            u.servico_oferecido, 
+            u.descricao_servico, 
+            u.email, 
+            u.telefone,
+            AVG(e.rating) as media_avaliacao,
+            COUNT(e.id) as total_avaliacoes
+        FROM users u
+        LEFT JOIN evaluations e ON u.id = e.evaluated_id
+        WHERE u.role = ?
+        GROUP BY u.id
     `;
     const [professionals] = await pool.execute(sql, ['Profissional']);
     return professionals;
@@ -125,10 +135,20 @@ const findAllProfessionals = async () => {
 
 const findProfessionalsByNameOrService = async (search) => {
     const sql = `
-        SELECT id, nome_completo, servico_oferecido, descricao_servico, email, telefone 
-        FROM users 
-        WHERE role = ? 
-        AND (nome_completo LIKE ? OR servico_oferecido LIKE ?)
+        SELECT 
+            u.id, 
+            u.nome_completo, 
+            u.servico_oferecido, 
+            u.descricao_servico, 
+            u.email, 
+            u.telefone,
+            AVG(e.rating) as media_avaliacao,
+            COUNT(e.id) as total_avaliacoes
+        FROM users u
+        LEFT JOIN evaluations e ON u.id = e.evaluated_id
+        WHERE u.role = ? 
+        AND (u.nome_completo LIKE ? OR u.servico_oferecido LIKE ?)
+        GROUP BY u.id
     `;
     const searchTerm = `%${search}%`;
     const [professionals] = await pool.execute(sql, ['Profissional', searchTerm, searchTerm]);
