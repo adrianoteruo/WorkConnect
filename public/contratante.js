@@ -91,17 +91,28 @@ async function fetchAllProfessionals(token, searchTerm = '') {
             return;
         }
         professionals.forEach(prof => {
-            const cardHTML = `
-                <div class="card professional-card" 
-                     data-professional-id="${prof.id}" 
-                     data-professional-name="${prof.nome_completo}">
-                    <h3>${prof.nome_completo}</h3>
-                    <p>${prof.servico_oferecido || 'Serviço não informado'}</p>
-                    <p class="card-hint">Clique para conversar</p>
-                </div>
-            `;
-            container.innerHTML += cardHTML;
-        });
+    let ratingDisplay;
+    if (prof.media_avaliacao) {
+        const nota = parseFloat(prof.media_avaliacao).toFixed(1);
+        ratingDisplay = `⭐ ${nota} <small>(${prof.total_avaliacoes} avaliações)</small>`;
+    } else {
+        ratingDisplay = `<span style="color: #888; font-size: 0.9em;">(Novo na plataforma)</span>`;
+    }
+
+    const cardHTML = `
+        <div class="card professional-card" 
+                data-professional-id="${prof.id}" 
+                data-professional-name="${prof.nome_completo}">
+            <h3>${prof.nome_completo}</h3>
+            <p style="font-weight: bold; color: #1e3c72;">${prof.servico_oferecido || 'Serviço não informado'}</p>
+            
+            <p style="margin: 10px 0;">${ratingDisplay}</p>
+            
+            <p class="card-hint">Clique para conversar</p>
+        </div>
+    `;
+    container.innerHTML += cardHTML;
+});
     } catch (error) {
         container.innerHTML = `<p style="color: red;">Erro ao carregar profissionais: ${error.message}</p>`;
     }
@@ -251,7 +262,7 @@ async function deleteUserProfile(token, userId) {
 
 
 async function initiateContactAndChat(professionalId, professionalName) {
-    const token = localStorage.getItem('token'); // Pega o token na hora
+    const token = localStorage.getItem('token'); 
     if (!token) {
         alert("Sessão expirada. Por favor, faça login novamente.");
         window.location.href = '/';
@@ -416,13 +427,12 @@ function setupEventListeners(token, userId) {
     const cepInputEdit = document.getElementById('editCEP');
     if (cepInputEdit) {
         cepInputEdit.addEventListener('blur', () => {
-            const cep = cepInputEdit.value.replace(/\D/g, ''); // Pega o valor do input 'editCEP'
+            const cep = cepInputEdit.value.replace(/\D/g, '');
             if (cep.length === 8) {
                 fetch(`https://viacep.com.br/ws/${cep}/json/`)
                     .then(res => res.json())
                     .then(data => {
                         if (!data.erro) {
-                            // Preenche os campos de edição de perfil
                             document.getElementById('editRua').value = data.logradouro;
                             document.getElementById('editBairro').value = data.bairro;
                             document.getElementById('editCidade').value = data.localidade;
