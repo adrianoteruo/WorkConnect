@@ -279,3 +279,4 @@ function setupPasswordToggle(iconId, inputId) {
 
 setupPasswordToggle('togglePass1', 'reg-password');
 setupPasswordToggle('togglePass2', 'confirm-password');
+setupPasswordToggle('toggleLoginPass', 'log-password');
