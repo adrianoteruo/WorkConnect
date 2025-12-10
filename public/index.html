@@ -1,281 +1,281 @@
-const API_URL = 'http://localhost:3000';
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WORKCONNECT</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
 
+  <div class="layout">
+    <div class="branding">
+      <div class="overlay">
+        <i class="fa-solid fa-briefcase logo-icon"></i>
+        <h1>WORKCONNECT</h1>
+        <p>Conectando profissionais autônomos e contratantes de forma simples e confiável.</p>
+      </div>
+    </div>
 
-const form = document.getElementById('register-form'); 
-const tipoUsuario = document.getElementById('tipoUsuario');
-const blocoProfissional = document.getElementById('blocoProfissional');
-const blocoContratante = document.getElementById('blocoContratante');
+    <div class="container">
+      <div class="tabs">
+        <button class="tab-button active" onclick="openTab('login')">Login</button>
+        <button class="tab-button" onclick="openTab('register')">Cadastro</button>
+      </div>
 
-
-
-const nomeInput = document.getElementById('nome');
-const emailInput = document.getElementById('email');
-const telefoneInput = document.getElementById('telefone');
-const cepInput = document.getElementById('cep');
-const ruaInput = document.getElementById('rua');
-const numeroInput = document.getElementById('numero');
-const complementoInput = document.getElementById('complemento');
-const bairroInput = document.getElementById('bairro');
-const cidadeInput = document.getElementById('cidade');
-const estadoInput = document.getElementById('estado');
-const servicoInput = document.getElementById('servico');
-const descricaoInput = document.getElementById('descricao');
-const buscaInput = document.getElementById('busca');
-
-
-if (tipoUsuario) {
-    tipoUsuario.addEventListener('change', () => {
-        if (tipoUsuario.value === 'Profissional') {
-            blocoProfissional.style.display = 'block';
-            blocoContratante.style.display = 'none';
-        } else if (tipoUsuario.value === 'Contratante') {
-            blocoProfissional.style.display = 'none';
-            blocoContratante.style.display = 'block';
-        } else {
-            blocoProfissional.style.display = 'none';
-            blocoContratante.style.display = 'none';
-        }
-    });
-}
-
-
-if (cepInput) {
-    cepInput.addEventListener('blur', () => {
-        const cep = cepInput.value.replace(/\D/g, '');
-        if (cep.length === 8) {
-            fetch(`https://viacep.com.br/ws/${cep}/json/`)
-                .then(res => res.json())
-                .then(data => {
-                    if (!data.erro) {
-                        ruaInput.value = data.logradouro;
-                        bairroInput.value = data.bairro;
-                        cidadeInput.value = data.localidade;
-                        estadoInput.value = data.uf;
-                    } else {
-                        alert('CEP não encontrado.');
-                    }
-                });
-        }
-    });
-}
-
-
-
-const registerForm = document.getElementById('register-form');
-const loginForm = document.getElementById('login-form');
-const messageEl = document.getElementById('message');
-
-
-function openTab(tabName) {
-    const tabContents = document.getElementsByClassName('tab-content');
-    for (let i = 0; i < tabContents.length; i++) {
-        tabContents[i].classList.remove('active');
-    }
-
-    const tabButtons = document.getElementsByClassName('tab-button');
-    for (let i = 0; i < tabButtons.length; i++) {
-        tabButtons[i].classList.remove('active');
-    }
-
-    document.getElementById(tabName).classList.add('active');
- 
-    const activeButton = Array.from(tabButtons).find(btn => btn.textContent.toLowerCase() === tabName);
-    if (activeButton) {
-        activeButton.classList.add('active');
-    }
-}
-
-
-const registerUser = async (e) => {
-    e.preventDefault();
-    const password = document.getElementById('reg-password').value;
-    const confirmPassword = document.getElementById('confirm-password').value;
-
-    if (password !== confirmPassword) {
-        const messageEl = document.getElementById('message');
-        messageEl.textContent = 'As senhas não conferem. Por favor, verifique.';
-        messageEl.style.color = 'red';
-        return; 
-    }
-    const lgpdCheckbox = document.getElementById('lgpd-consent');
-    if (!lgpdCheckbox.checked) {
-        const messageEl = document.getElementById('message');
-        messageEl.textContent = 'Você deve aceitar os Termos de Uso e a Política de Privacidade para continuar.';
-        messageEl.style.color = 'red';
-        return; 
-    }
-
-    const formData = {
-        username: document.getElementById('reg-username').value,
-        password:password,
-        role: document.getElementById('tipoUsuario').value,
-        nome: document.getElementById('nome').value,
-        email: document.getElementById('email').value,
-        cep: document.getElementById('cep').value,
-        rua: document.getElementById('rua').value,
-        numero: document.getElementById('numero').value,
-        complemento: document.getElementById('complemento').value,
-        bairro: document.getElementById('bairro').value,
-        cidade: document.getElementById('cidade').value,
-        estado: document.getElementById('estado').value,
-        servico: document.getElementById('servico').value,
-        descricao: document.getElementById('descricao').value,
-        busca: document.getElementById('busca').value,
-        lgpd_consent: document.getElementById('lgpd-consent').checked 
-    };
-    
-
-    try {
-        const response = await fetch(`${API_URL}/auth/register`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(formData) 
-        });
-
-        const data = await response.json();
-        messageEl.textContent = data.message;
-        
-        if (response.ok) {
-            document.getElementById('register-form').reset();
-            document.getElementById('blocoProfissional').style.display = 'none';
-            document.getElementById('blocoContratante').style.display = 'none';
-
-            messageEl.style.color = 'green';
-            const loginButton = Array.from(document.getElementsByClassName('tab-button')).find(b => b.textContent === 'Login');
-            if (loginButton) {
-                setTimeout(() => loginButton.click(), 2000);
-            }
-        } else {
-            messageEl.style.color = 'red';
-        }
-    } catch (error) {
-        console.error('Erro no registro:', error);
-        messageEl.textContent = 'Erro ao conectar com o servidor.';
-        messageEl.style.color = 'red';
-    }
-};
-
-
-const loginUser = async (e) => {
-    e.preventDefault();
-    const username = document.getElementById('log-username').value;
-    const password = document.getElementById('log-password').value;
-
-    try {
-        const response = await fetch(`${API_URL}/auth/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password })
-        });
-
-        const data = await response.json();
-        
-        if (response.ok) {
-            messageEl.textContent = "Login bem-sucedido! Redirecionando...";
-            messageEl.style.color = 'green';
+      <div id="login" class="tab-content active">
+        <form id="login-form">
+          <div class="input-group"> 
+            <i class="fa-solid fa-user"></i>
+            <input type="text" id="log-username" placeholder="Usuário" required>
+          </div>
+          <div class="input-group">
+            <i class="fa-solid fa-lock"></i>
             
-            localStorage.setItem('token', data.token);
-            localStorage.setItem('username', data.username);
-            localStorage.setItem('userRole', data.role);
-            localStorage.setItem('userId', data.userId);
-            
-            setTimeout(() => {
-  
-                if (data.role === 'Contratante') {
-                    window.location.href = '/contratante';
-                } else if (data.role === 'Profissional') {
-                    window.location.href = '/profissional';
-                } else if (data.role === 'Admin') {
-                    window.location.href = '/admin';
-                } else {
-                    alert('Login bem-sucedido');
-                    window.location.href = '/';
-                }
+            <div style="position: relative; flex: 1;">
+                <input type="password" id="log-password" placeholder="Senha" required style="width: 100%; padding-right: 35px; border: none; outline: none;">
+                
+                <i class="fa-solid fa-eye" id="toggleLoginPass" 
+                  style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #777;">
+                </i>
+            </div>
+          </div>
+          <button type="submit">Entrar</button>
+          <p class="hint">Esqueceu a senha? <a href="#" onclick="openForgotModal()">Clique aqui</a></p>
+        </form>
+      </div>
 
-                }, 1000);
+      <div id="register" class="tab-content">
+        <form id="register-form">
+          
+          <div class="row">
+            <div class="col">
+                <label for="reg-username">Usuário:</label>
+                <input type="text" id="reg-username" required>
+            </div>
+          </div>
+          <div class="row">
+              <div class="col" style="position: relative;">
+                  <label for="reg-password">Senha:</label>
+                  <div style="position: relative;">
+                      <input type="password" id="reg-password" required style="padding-right: 35px;">
+                      <i class="fa-solid fa-eye" id="togglePass1" 
+                        style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #777;">
+                      </i>
+                  </div>
+              </div>
+              
+              <div class="col" style="position: relative;">
+                  <label for="confirm-password">Confirmar Senha:</label>
+                  <div style="position: relative;">
+                      <input type="password" id="confirm-password" required style="padding-right: 35px;">
+                      <i class="fa-solid fa-eye" id="togglePass2" 
+                        style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #777;">
+                      </i>
+                  </div>
+              </div>
+          </div>
+          <hr/>
 
+          <label for="tipoUsuario">Selecione:</label>
+          <select id="tipoUsuario" required>
+              <option value="">Selecione</option>
+              <option value="Profissional">Profissional</option>
+              <option value="Contratante">Contratante</option>
+          </select>
+          
 
-        } else {
-            messageEl.textContent = data.message;
-            messageEl.style.color = 'red';
+          <div class="row">
+              <div class="col">
+                  <label for="nome">Nome Completo:</label>
+                  <input type="text" id="nome" required>
+              </div>
+              <div class="col">
+                  <label for="email">E-mail:</label>
+                  <input type="email" id="email" required>
+              </div>
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <label for="cep">CEP:</label>
+              <input type="text" id="cep" required>
+            </div>
+          </div>
+      
+          <div class="row">
+            <div class="col">
+              <label for="rua">Rua:</label>
+              <input type="text" id="rua" required>
+            </div>
+            <div class="col">
+              <label for="numero">Número:</label>
+              <input type="text" id="numero" required>
+            </div>
+          </div>
+      
+          <div class="row">
+            <div class="col">
+              <label for="complemento">Complemento:</label>
+              <input type="text" id="complemento">
+            </div>
+            <div class="col">
+              <label for="bairro">Bairro:</label>
+              <input type="text" id="bairro" required>
+            </div>
+          </div>
+      
+          <div class="row">
+            <div class="col">
+              <label for="cidade">Cidade:</label>
+              <input type="text" id="cidade" required>
+            </div>
+            <div class="col">
+              <label for="estado">Estado:</label>
+              <input type="text" id="estado" required>
+            </div>
+          </div>
+          
+          <div id="blocoProfissional" style="display:none;">
+            <hr />
+            <label for="servico">Serviço Oferecido:</label>
+            <input type="text" id="servico" placeholder="Ex: Pedreiro, Encanador...">
+            <label for="descricao">Descrição do Serviço:</label>
+            <textarea id="descricao" placeholder="Conte um pouco sobre seu trabalho"></textarea>
+          </div>
+
+          <div id="blocoContratante" style="display:none;">
+            <hr />
+            <label for="busca">Serviço que Você Busca:</label>
+            <input type="text" id="busca" placeholder="Ex: Eletricista, Babá...">
+          </div>
+          
+          <div class="form-group-lgpd">
+            <input type="checkbox" id="lgpd-consent" name="lgpd-consent">
+            <label for="lgpd-consent">
+                Eu li e aceito a
+                <a href="javascript:void(0)" onclick="openLgpd()">Política de Privacidade</a> (LGPD).
+            </label>
+          </div>
+          <button type="submit">Cadastrar</button>
+          
+          <p class="lgpd">
+            Ao continuar, você concorda com nossa 
+            <a href="#" onclick="openLgpd()">Política de Privacidade (LGPD)</a>.
+          </p>
+        </form>
+      </div>
+
+      <div class="status-section">
+        <p id="message"></p>
+      </div>
+    <div id="lgpdModal" class="modal">
+      <div class="modal-content" style="max-height: 80vh; overflow-y: auto;">
+        <span class="close" onclick="closeLgpd()">&times;</span>
+        <h2>Política de Privacidade e Termos de Uso</h2>
+        <p><small>Última atualização: Dezembro de 2025</small></p>
+
+        <h3>1. Introdução</h3>
+        <p>
+          Bem-vindo ao <strong>WorkConnect</strong>. Nós levamos sua privacidade a sério. Esta política descreve como coletamos, usamos e protegemos seus dados pessoais, em conformidade com a Lei Geral de Proteção de Dados (Lei nº 13.709/2018 - LGPD).
+        </p>
+
+        <h3>2. Dados Coletados</h3>
+        <p>Para o funcionamento da plataforma, coletamos os seguintes dados:</p>
+        <ul>
+          <li><strong>Identificação:</strong> Nome completo, e-mail e telefone.</li>
+          <li><strong>Localização:</strong> Endereço completo (Rua, Bairro, Cidade, Estado e CEP) para conectar você a serviços próximos.</li>
+          <li><strong>Perfil Profissional:</strong> Se você for um prestador de serviços, coletamos informações sobre sua especialidade e descrição do trabalho.</li>
+          <li><strong>Comunicação:</strong> Mensagens trocadas através do nosso chat interno são armazenadas para histórico e segurança.</li>
+          <li><strong>Avaliações:</strong> Notas e comentários deixados por outros usuários sobre seus serviços.</li>
+        </ul>
+
+        <h3>3. Finalidade do Tratamento</h3>
+        <p>Seus dados são utilizados estritamente para:</p>
+        <ul>
+          <li>Viabilizar o cadastro e a autenticação segura no sistema (Login).</li>
+          <li>Conectar Contratantes e Profissionais baseados na oferta de serviço e localização.</li>
+          <li>Permitir a comunicação em tempo real entre as partes interessadas.</li>
+          <li>Gerenciar o ciclo de vida dos serviços (proposta, execução e conclusão).</li>
+        </ul>
+
+        <h3>4. Compartilhamento de Dados</h3>
+        <p>O WorkConnect <strong>não vende</strong> seus dados para terceiros. O compartilhamento ocorre apenas:</p>
+        <ul>
+          <li><strong>Entre Usuários:</strong> Nome, especialidade e avaliações de Profissionais são visíveis para Contratantes na busca. O telefone pode ser compartilhado mediante contato iniciado na plataforma.</li>
+          <li><strong>Serviços Externos:</strong> Utilizamos a API <em>ViaCEP</em> apenas para consulta de endereço, sem armazenar dados neles.</li>
+          <li><strong>Obrigação Legal:</strong> Mediante ordem judicial ou requisição de autoridades competentes.</li>
+        </ul>
+
+        <h3>5. Segurança</h3>
+        <p>
+          Adotamos medidas técnicas para proteger seus dados, incluindo a <strong>criptografia de senhas</strong> (hashing) antes do armazenamento no banco de dados. No entanto, nenhum sistema é completamente imune a ataques, e encorajamos o uso de senhas fortes.
+        </p>
+
+        <h3>6. Seus Direitos (Titular dos Dados)</h3>
+        <p>Conforme o Art. 18 da LGPD, você tem direito a:</p>
+        <ul>
+          <li>Confirmar a existência e acessar seus dados.</li>
+          <li>Corrigir dados incompletos ou desatualizados (disponível na aba "Editar Perfil").</li>
+          <li>Solicitar a <strong>exclusão definitiva</strong> da sua conta e dados pessoais.</li>
+        </ul>
+
+        <h3>7. Contato</h3>
+        <p>
+          Para exercer seus direitos ou tirar dúvidas sobre esta política, entre em contato com nosso Encarregado de Dados (DPO) através do e-mail: <strong>privacidade@workconnect.com.br</strong>.
+        </p>
+
+        <hr>
+        <p>
+          <strong>Ao clicar em "Cadastrar", você declara que leu, compreendeu e concorda com o tratamento dos seus dados conforme descrito acima.</strong>
+        </p>
+      </div>
+    </div>
+<div id="forgotPasswordModal" class="modal">
+  <div class="modal-content">
+      <span class="close" onclick="closeForgotModal()">&times;</span>
+      <h2>Recuperar Senha</h2>
+      <p>Digite seu e-mail de cadastro. Enviaremos um link para redefinir sua senha.</p>
+      <form id="forgot-password-form">
+          <div class="input-group">
+              <input type="email" id="forgot-email" placeholder="Seu e-mail" required>
+            </div>
+            <button type="submit" class="btn">Enviar Link</button>
+        </form>
+    </div>
+</div>
+
+      <script src="script.js"></script>
+
+      <script>
+        function openTab(tabName) {
+          const tabs = document.querySelectorAll(".tab-content");
+          const buttons = document.querySelectorAll(".tab-button");
+
+          tabs.forEach(tab => tab.classList.remove("active"));
+          buttons.forEach(btn => btn.classList.remove("active"));
+
+          document.getElementById(tabName).classList.add("active");
+          event.currentTarget.classList.add("active");
         }
-    } catch (error) {
-        console.error('Erro no login:', error);
-        messageEl.textContent = 'Erro ao conectar com o servidor.';
-        messageEl.style.color = 'red';
-    }
-};
 
-
-if (registerForm) {
-    registerForm.addEventListener('submit', registerUser);
-}
-
-if (loginForm) {
-    loginForm.addEventListener('submit', loginUser);
-}
-
-const forgotPasswordModal = document.getElementById('forgotPasswordModal');
-const forgotPasswordForm = document.getElementById('forgot-password-form');
-const forgotEmailInput = document.getElementById('forgot-email');
-
-function openForgotModal() {
-    forgotPasswordModal.style.display = 'flex';
-}
-
-function closeForgotModal() {
-    forgotPasswordModal.style.display = 'none';
-}
-
-
-window.addEventListener('click', (event) => {
-    if (event.target === forgotPasswordModal) {
-        closeForgotModal();
-    }
-});
-
-
-forgotPasswordForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const email = forgotEmailInput.value;
-    
-    try {
-        const response = await fetch(`${API_URL}/auth/forgot-password`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email })
-        });
-        
-        const data = await response.json();
-        
-        if (response.ok) {
-            alert(data.message); 
-            closeForgotModal(); 
-        } else {
-            alert(`Erro: ${data.message}`);
+        function openLgpd() {
+          document.getElementById("lgpdModal").style.display = "flex";
         }
-    } catch (error) {
-        alert('Erro de conexão com o servidor.');
-    }
-});
 
+        function closeLgpd() {
+          document.getElementById("lgpdModal").style.display = "none";
+        }
 
-
-function setupPasswordToggle(iconId, inputId) {
-    const icon = document.getElementById(iconId);
-    const input = document.getElementById(inputId);
-
-    if (icon && input) {
-        icon.addEventListener('click', function () {
-            const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
-            input.setAttribute('type', type);
-            
-            this.classList.toggle('fa-eye');
-            this.classList.toggle('fa-eye-slash');
-        });
-    }
-}
-
-
-setupPasswordToggle('togglePass1', 'reg-password');
-setupPasswordToggle('togglePass2', 'confirm-password');
+        window.onclick = function(event) {
+          const modal = document.getElementById("lgpdModal");
+          if (event.target === modal) {
+            modal.style.display = "none";
+          }
+        }
+      </script>
+    </div>
+  </div>
+</body>
+</html>
