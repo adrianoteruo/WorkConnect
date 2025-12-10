@@ -122,11 +122,16 @@ async function fetchMyEvaluations(token) {
 
         evaluations.forEach(ev => {
             const stars = '⭐'.repeat(ev.rating); 
+            const dataAvaliacao = new Date(ev.created_at).toLocaleDateString('pt-BR');
+            const servicoDesc = ev.servico_titulo || 'Serviço prestado';
             const evalHTML = `
                 <div class="avaliacao">
-                  <p><strong>${ev.evaluator_name}</strong></p>
-                  <p>${stars} (${ev.rating}/5)</p>
-                  <p>${ev.comment || 'Nenhum comentário.'}</p>
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                      <span style="font-weight: bold; color: #1e3c72;">${servicoDesc}</span>
+                      <span style="font-size: 0.85em; color: #666;">${dataAvaliacao}</span>
+                  </div>
+                  <p>${stars}</p>
+                  <p style="margin-top: 5px;">"${ev.comment || 'Sem comentário.'}"</p>
                 </div>
             `;
             container.innerHTML += evalHTML;
