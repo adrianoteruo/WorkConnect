@@ -2,13 +2,13 @@ require('dotenv').config();
 const http = require('http');
 const { Server } = require("socket.io");
 const app = require('./app'); 
-const pool = require('./config/database');
+
+
+const messageRepository = require('./repositories/messageRepository');
 
 const port = process.env.PORT || 3000;
 
-
 const server = http.createServer(app);
-
 const io = new Server(server);
 
 
@@ -25,14 +25,11 @@ io.on('connection', (socket) => {
 
     socket.on('sendMessage', async ({ senderId, receiverId, message }) => {
         try {
-            const numSenderId = parseInt(senderId, 10);
-            const numReceiverId = parseInt(receiverId, 10);
-            const roomName = [numSenderId, numReceiverId].sort((a, b) => a - b).join('-');
+            const roomName = [parseInt(senderId), parseInt(receiverId)].sort((a, b) => a - b).join('-');
             
-            const sql = 'INSERT INTO messages (sender_id, receiver_id, message_text) VALUES (?, ?, ?)';
-            const [result] = await pool.execute(sql, [numSenderId, numReceiverId, message]);
+
+            const newMessage = await messageRepository.saveMessage(senderId, receiverId, message);
             
-            const newMessage = { id: result.insertId, /* ... */ };
             io.to(roomName).emit('receiveMessage', newMessage);
         } catch (error) {
             console.error("Erro ao enviar mensagem:", error);
