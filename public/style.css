@@ -400,3 +400,14 @@ select {
     color: #0056d2;
     text-decoration: underline;
 }
+
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+    display: none;
+}
+
+
+input[type="password"]::-webkit-password-toggle-btn {
+    display: none;
+    -webkit-appearance: none;
+}
