@@ -99,7 +99,9 @@ const registerUser = async (e) => {
     }
     const lgpdCheckbox = document.getElementById('lgpd-consent');
     if (!lgpdCheckbox.checked) {
-        showAlert('Você deve aceitar os Termos de Uso e a Política de Privacidade para continuar.', 'error');
+        const messageEl = document.getElementById('message');
+        messageEl.textContent = 'Você deve aceitar os Termos de Uso e a Política de Privacidade para continuar.';
+        messageEl.style.color = 'red';
         return; 
     }
 
