@@ -40,7 +40,7 @@ const login = async (username, password) => {
     }
 
  
-    const [user] = await userRepository.findByEmailOrUsername(username, username); // Permite login com email ou username
+    const [user] = await userRepository.findByEmailOrUsername(username, username); 
     if (!user) {
         throw new Error('Usuário ou senha inválidos.');
     }
@@ -145,7 +145,8 @@ const forgotPassword = async (email) => {
     await userRepository.saveResetToken(user.id, token, expires);
 
 
-    const resetLink = `http://localhost:3000/reset-password.html?token=${token}`;
+    const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
+    const resetLink = `${baseUrl}/reset-password.html?token=${token}`;
     await sendPasswordResetEmail(email, resetLink);
     
     return { message: 'Se um usuário com este e-mail existir, um link de recuperação foi enviado.' };
