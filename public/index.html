@@ -47,10 +47,27 @@
                 <label for="reg-username">Usuário:</label>
                 <input type="text" id="reg-username" required>
             </div>
-            <div class="col">
-                <label for="reg-password">Senha:</label>
-                <input type="password" id="reg-password" required>
-            </div>
+          </div>
+          <div class="row">
+              <div class="col" style="position: relative;">
+                  <label for="reg-password">Senha:</label>
+                  <div style="position: relative;">
+                      <input type="password" id="reg-password" required style="padding-right: 35px;">
+                      <i class="fa-solid fa-eye" id="togglePass1" 
+                        style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #777;">
+                      </i>
+                  </div>
+              </div>
+              
+              <div class="col" style="position: relative;">
+                  <label for="confirm-password">Confirmar Senha:</label>
+                  <div style="position: relative;">
+                      <input type="password" id="confirm-password" required style="padding-right: 35px;">
+                      <i class="fa-solid fa-eye" id="togglePass2" 
+                        style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #777;">
+                      </i>
+                  </div>
+              </div>
           </div>
           <hr/>
 
@@ -74,10 +91,6 @@
           </div>
 
           <div class="row">
-            <div class="col">
-              <label for="telefone">Telefone:</label>
-              <input type="tel" id="telefone" required>
-            </div>
             <div class="col">
               <label for="cep">CEP:</label>
               <input type="text" id="cep" required>
