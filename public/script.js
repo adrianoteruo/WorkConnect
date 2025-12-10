@@ -88,6 +88,15 @@ function openTab(tabName) {
 
 const registerUser = async (e) => {
     e.preventDefault();
+    const password = document.getElementById('reg-password').value;
+    const confirmPassword = document.getElementById('confirm-password').value;
+
+    if (password !== confirmPassword) {
+        const messageEl = document.getElementById('message');
+        messageEl.textContent = 'As senhas não conferem. Por favor, verifique.';
+        messageEl.style.color = 'red';
+        return; 
+    }
     const lgpdCheckbox = document.getElementById('lgpd-consent');
     if (!lgpdCheckbox.checked) {
         showAlert('Você deve aceitar os Termos de Uso e a Política de Privacidade para continuar.', 'error');
@@ -96,11 +105,10 @@ const registerUser = async (e) => {
 
     const formData = {
         username: document.getElementById('reg-username').value,
-        password: document.getElementById('reg-password').value,
+        password:password,
         role: document.getElementById('tipoUsuario').value,
         nome: document.getElementById('nome').value,
         email: document.getElementById('email').value,
-        telefone: document.getElementById('telefone').value,
         cep: document.getElementById('cep').value,
         rua: document.getElementById('rua').value,
         numero: document.getElementById('numero').value,
@@ -248,3 +256,24 @@ forgotPasswordForm.addEventListener('submit', async (e) => {
         alert('Erro de conexão com o servidor.');
     }
 });
+
+
+
+function setupPasswordToggle(iconId, inputId) {
+    const icon = document.getElementById(iconId);
+    const input = document.getElementById(inputId);
+
+    if (icon && input) {
+        icon.addEventListener('click', function () {
+            const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+            input.setAttribute('type', type);
+            
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+    }
+}
+
+
+setupPasswordToggle('togglePass1', 'reg-password');
+setupPasswordToggle('togglePass2', 'confirm-password');
