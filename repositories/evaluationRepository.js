@@ -11,9 +11,13 @@ const create = async (evaluatorId, evaluated_id, rating, comment) => {
 
 const findByEvaluatedId = async (evaluatedId) => {
     const sql = `
-        SELECT e.rating, e.comment, e.created_at, u.nome_completo AS evaluator_name 
+        SELECT 
+            e.rating, 
+            e.comment, 
+            e.created_at, 
+            u.servico_oferecido AS servico_titulo
         FROM evaluations e
-        JOIN users u ON e.evaluator_id = u.id
+        JOIN users u ON e.evaluated_id = u.id
         WHERE e.evaluated_id = ?
         ORDER BY e.created_at DESC
     `;
